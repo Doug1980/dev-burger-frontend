@@ -64,14 +64,17 @@ export function Orders() {
     if (activeStatus === 0) {
       setFilteredOrders(orders);
     } else {
-      const statusIndex = orderStatusOptions.findLastIndex(item => item.id === activeStatus,);
+      const statusIndex = orderStatusOptions.findLastIndex(
+        (item) => item.id === activeStatus,
+      );
 
-      const newFilteredOrders = orders.filter(order => order.status === orderStatusOptions[statusIndex].value,);
+      const newFilteredOrders = orders.filter(
+        (order) => order.status === orderStatusOptions[statusIndex].value,
+      );
 
       setFilteredOrders(newFilteredOrders);
     }
   }, [orders]);
-
 
   return (
     <>

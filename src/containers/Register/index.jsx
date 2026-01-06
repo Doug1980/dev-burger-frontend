@@ -50,37 +50,21 @@ export function Register() {
 
   const onSubmit = async (data) => {
     try {
-      const response = await toast.promise(
-        api.post('/sessions', {
+      await toast.promise(
+        api.post('/users', {
+          name: data.name,
           email: data.email,
           password: data.password,
         }),
         {
-          pending: 'Verificando os dados',
-          success: 'Seja bem-vindo(a) 👌',
-          error: 'E-mail ou senha Incorretos 🤯',
-        }
+          pending: 'Criando sua conta...',
+          success: 'Conta criada com sucesso! 👌',
+          error: 'Erro ao criar a conta 🤯',
+        },
       );
 
-      const userData = response.data;
-
-      // 1) salva primeiro (isso tem que escrever no localStorage)
-      putUserData(userData);
-
-      // 2) detecta admin (robusto)
-      const isAdmin =
-        userData?.admin === true ||
-        userData?.admin === 'true' ||
-        userData?.role === 'admin';
-
-      // 3) navega depois (sem setTimeout)
-      if (isAdmin) {
-        navigate('/admin/home', { replace: true });
-      } else {
-        navigate('/', { replace: true });
-      }
+      navigate('/login'); // redireciona para login
     } catch (err) {
-      // toast.promise já mostra o erro
       console.log(err);
     }
   };

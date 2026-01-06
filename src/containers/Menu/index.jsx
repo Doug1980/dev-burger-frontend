@@ -1,124 +1,135 @@
+import { useEffect, useState } from 'react';
+import { SlActionUndo } from 'react-icons/sl';
+import Swal from 'sweetalert2';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-import { useEffect, useState } from "react";
+import { CardProduct } from '../../components/CardProduct';
+import { api } from '../../services/api';
+import { formatPrice } from '../../utils/formatPrice';
 
-import { SlActionUndo } from "react-icons/sl";
-
-import { CardProduct } from "../../components/CardProduct";
-import { api } from "../../services/api";
-import { useLocation, useNavigate } from "react-router-dom";
-import { formatPrice } from "../../utils/formatPrice";
-import { Container, Banner, CategoryMenu, ProductsContainer, CategoryButton, Button } from "./styles";
+import {
+  Container,
+  Banner,
+  CategoryMenu,
+  ProductsContainer,
+  CategoryButton,
+  Button,
+  TopMenu,
+  GlobalStyle,
+} from './styles';
 
 export function Menu() {
-    const [categories, setCategories] = useState([]);
-    const [products, setProducts] = useState([]);
-    const [filteredProducts, setFilteredProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
 
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const { search } = useLocation();
+  const queryParams = new URLSearchParams(search);
 
-    const { search } = useLocation();
+  const [activeCategory, setActiveCategory] = useState(() => {
+    const categoryId = +queryParams.get('categoria');
+    return categoryId || 0;
+  });
 
-    const queryParams = new URLSearchParams(search);
+  // Carregar categorias e produtos
+  useEffect(() => {
+    async function loadCategories() {
+      const { data } = await api.get('/categories');
+      setCategories([{ id: 0, name: 'Todas' }, ...data]);
+    }
 
+    async function loadProducts() {
+      const { data } = await api.get('/products');
+      const newProducts = data.map((product) => ({
+        currencyValue: formatPrice(product.price),
+        ...product,
+      }));
+      setProducts(newProducts);
+    }
 
-    const [activeCategory, setActiveCategory] = useState(() => {
-        const categoryId = +queryParams.get('categoria');
+    loadCategories();
+    loadProducts();
+  }, []);
 
-        if (categoryId) {
-            return categoryId
-        }
-        return 0;
-    });
+  // Filtrar produtos por categoria
+  useEffect(() => {
+    if (activeCategory === 0) {
+      setFilteredProducts(products);
+    } else {
+      setFilteredProducts(
+        products.filter((product) => product.category_id === activeCategory),
+      );
+    }
+  }, [products, activeCategory]);
 
+  // Função para adicionar ao carrinho com pop-up de confirmação
+  const handleAddToCart = async (productId, quantity = 1) => {
+    try {
+      await api.post('/cart', { product_id: productId, quantity });
 
-    useEffect(() => {
-        async function loadCategories() {
-            const { data } = await api.get('/categories');
+      Swal.fire({
+        title: 'Sucesso!',
+        text: 'Produto adicionado ao carrinho!',
+        icon: 'success',
+        confirmButtonText: 'OK',
+      });
+    } catch (err) {
+      Swal.fire({
+        title: 'Erro!',
+        text: 'Não foi possível adicionar o produto.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
+    }
+  };
 
-            const newCategories = [{ id: 0, name: 'Todas' }, ...data];
-
-            setCategories(newCategories);
-        }
-
-        async function loadProducts() {
-            const { data } = await api.get('/products');
-
-            console.log(data);
-
-            const newProducts = data
-                .map(product => ({
-                    currencyValue: formatPrice(product.price),
-                    ...product,
-                }));
-
-            setProducts(newProducts);
-        }
-
-        loadCategories();
-        loadProducts();
-    }, []);
-
-
-    useEffect(() => {
-        if (activeCategory === 0) {
-            setFilteredProducts(products);
-        } else {
-            const newFilteredProducts = products.filter(
-                (product) => product.category_id === activeCategory,
-            );
-
-            setFilteredProducts(newFilteredProducts);
-        }
-
-    }, [products, activeCategory]);
-
-
-    return (
-        <Container>
-            <Banner>
-                <h1>
-                    O MELHOR
-                    <br />
-                    HAMBURGUER
-                    <br />
-                    ESTÁ AQUI!
-                    <span>Esse cardápio está irresistivél!</span>
-                </h1>
-            </Banner>
-            <Button onClick={() => navigate("/")}>
-                <SlActionUndo size={25} style={{ marginRight: "15px" }} />
-                Voltar
-            </Button>
-            <CategoryMenu>
-
-                {categories.map(category => (
-                    <CategoryButton
-                        key={category.id}
-                        $isActiveCategory={category.id === activeCategory}
-                        onClick={() => {
-                            navigate(
-                                {
-                                    pathname: '/cardapio',
-                                    search: `?categoria=${category.id}`
-                                },
-                                {
-                                    replace: true,
-                                },
-
-                            );
-                            setActiveCategory(category.id);
-                        }}
-
-                    >{category.name}</CategoryButton>
-                ))}
-            </CategoryMenu>
-
-            <ProductsContainer>
-                {filteredProducts.map(product => (
-                    <CardProduct product={product} key={product.id} />
-                ))}
-            </ProductsContainer>
-        </Container>
-
-    );
+  return (
+    <Container>
+      <GlobalStyle /> {/* <- aplica os estilos globais */}
+      {/* resto do menu */}
+      <Banner>
+        <h1>
+          O MELHOR
+          <br />
+          HAMBURGUER
+          <br />
+          ESTÁ AQUI!
+          <span>Esse cardápio está irresistível!</span>
+        </h1>
+      </Banner>
+      <TopMenu>
+        <Button onClick={() => navigate(-1)}>
+          <SlActionUndo size={16} />
+          Voltar
+        </Button>
+      </TopMenu>
+      <CategoryMenu>
+        {categories.map((category) => (
+          <CategoryButton
+            key={category.id}
+            $isActiveCategory={category.id === activeCategory}
+            onClick={() => {
+              navigate(
+                { pathname: '/cardapio', search: `?categoria=${category.id}` },
+                { replace: true },
+              );
+              setActiveCategory(category.id);
+            }}
+          >
+            {category.name}
+          </CategoryButton>
+        ))}
+      </CategoryMenu>
+      <ProductsContainer>
+        {filteredProducts.map((product) => (
+          <CardProduct
+            key={product.id}
+            product={product}
+            onAddToCart={() => handleAddToCart(product.id)}
+          />
+        ))}
+      </ProductsContainer>
+    </Container>
+  );
 }

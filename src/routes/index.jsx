@@ -17,7 +17,6 @@ import {
 import { UserLayout } from '../layouts/UserLayout';
 import { AdminLayout } from '../layouts/AdminLayout';
 
-
 export function Router() {
   return (
     <Routes>
