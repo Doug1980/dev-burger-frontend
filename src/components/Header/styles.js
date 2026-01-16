@@ -160,3 +160,11 @@ export const Logout = styled.button`
     text-decoration: underline;
   }
 `;
+
+export const Header = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 30px;
+`;

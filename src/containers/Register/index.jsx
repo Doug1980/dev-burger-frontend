@@ -7,6 +7,7 @@ import * as yup from 'yup';
 import Logo from '../../assets/logo.svg';
 import { Button } from '../../components/Button';
 import { api } from '../../services/api';
+
 import {
   Container,
   Form,
@@ -15,14 +16,15 @@ import {
   RightContainer,
   Title,
   Link,
+  Header,
 } from './styles';
 
 export function Register() {
   const navigate = useNavigate();
+
   const schema = yup
     .object({
       name: yup.string().required('Nome obrigatório'),
-
       email: yup
         .string()
         .email('Digite um e-mail válido')
@@ -46,27 +48,21 @@ export function Register() {
     resolver: yupResolver(schema),
   });
 
-  console.log(errors);
-
   const onSubmit = async (data) => {
-    try {
-      await toast.promise(
-        api.post('/users', {
-          name: data.name,
-          email: data.email,
-          password: data.password,
-        }),
-        {
-          pending: 'Criando sua conta...',
-          success: 'Conta criada com sucesso! 👌',
-          error: 'Erro ao criar a conta 🤯',
-        },
-      );
+    await toast.promise(
+      api.post('/users', {
+        name: data.name,
+        email: data.email,
+        password: data.password,
+      }),
+      {
+        pending: 'Criando sua conta...',
+        success: 'Conta criada com sucesso! 👌',
+        error: 'Erro ao criar a conta 🤯',
+      },
+    );
 
-      navigate('/login'); // redireciona para login
-    } catch (err) {
-      console.log(err);
-    }
+    navigate('/login');
   };
 
   return (
@@ -74,8 +70,15 @@ export function Register() {
       <LeftContainer>
         <img src={Logo} alt="logo-devburguer" />
       </LeftContainer>
+
       <RightContainer>
-        <Title>Criar Conta</Title>
+        <Header>
+          <img src={Logo} alt="Dev Burguer" />
+          <Title>
+            Crie sua conta no <span>Dev Burguer</span>
+          </Title>
+        </Header>
+
         <Form onSubmit={handleSubmit(onSubmit)}>
           <InputContainer>
             <label>Nome</label>
@@ -103,6 +106,7 @@ export function Register() {
 
           <Button type="submit">Criar Conta</Button>
         </Form>
+
         <p>
           Já possui conta? <Link to="/login">Clique aqui.</Link>
         </p>

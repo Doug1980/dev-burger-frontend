@@ -61,25 +61,36 @@ export const Content = styled.div`
   padding: 48px;
   margin: 0 auto;
 
-  overflow-x: auto;   /* ✅ scroll horizontal controlado */
-  overscroll-behavior-x: contain;
-
   /* 📱 Mobile */
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
     padding: 24px;
     gap: 24px;
+
+    /* 👇 garante scroll horizontal */
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    /* 👇 overscroll APENAS horizontal */
+    overscroll-behavior-x: contain;
+
+    /* 👇 evita efeito colateral no body */
+    -webkit-overflow-scrolling: touch;
   }
 `;
 
 export const BackButton = styled.button`
+  position: absolute;
+  left: 40px;
+
   background-color: #9758a6;
   color: #fff;
   border: none;
 
-  padding: 6px 16px;
+  margin-bottom: -40px;
+  padding: 3px 14px;
   border-radius: 6px;
-  font-size: 18px;
+  font-size: 25px;
   font-weight: 500;
   font-family: "Poppins", sans-serif;
 
@@ -88,9 +99,22 @@ export const BackButton = styled.button`
   gap: 6px;
 
   cursor: pointer;
+  transition: all 0.25s ease;
 
   &:hover {
     background-color: #5c2669;
+    color: #fff;
+  }
+
+  &:active {
+    transform: scale(0.96);
+  }
+
+  /* 📱 Mobile */
+  @media (max-width: 768px) {
+    position: relative;
+    left: 0;
+    margin-bottom: 20px; // <- ADICIONA ISSO AQUI
   }
 `;
 

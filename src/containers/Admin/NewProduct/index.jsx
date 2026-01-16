@@ -24,9 +24,14 @@ const schema = yup.object({
   name: yup.string().required('Digite o nome do produto'),
   price: yup
     .number()
-    .positive()
+    .transform((value, originalValue) => {
+      return typeof originalValue === 'string'
+        ? parseFloat(originalValue.replace(',', '.'))
+        : value;
+    })
+    .positive('O preço deve ser positivo')
     .required('Digite o preço do produto')
-    .typeError('Digite o preço do produto'),
+    .typeError('Digite um preço válido'),
   category: yup.object().required('Selecione a categoria'),
   offer: yup.bool(),
   file: yup
@@ -34,7 +39,7 @@ const schema = yup.object({
     .test('required', 'Escolha um arquivo para continuar', (value) => {
       return value && value.length > 0;
     })
-    .test('fileSize', 'Carregue arquivos até 3mb', (value) => {
+    .test('fileSize', 'Carregue arquivos até 5mb', (value) => {
       return value && value.length > 0 && value[0].size <= 5 * 1024 * 1024;
     })
     .test('type', 'Carregue apenas imagens em jpeg ou PNG', (value) => {
@@ -50,14 +55,12 @@ export function NewProduct() {
   const [fileName, setFileName] = useState(null);
   const [categories, setCategories] = useState([]);
 
-  const usenavigate = useNavigate();
+  const navigate = useNavigate(); // Padronizei para 'navigate'
 
   useEffect(() => {
     async function loadCategories() {
       const { data } = await api.get('/categories');
-
-      console.log('Categorias carregadas:', data);
-      setCategories(data); // 👈 ISSO ESTAVA FALTANDO
+      setCategories(data);
     }
     loadCategories();
   }, []);
@@ -70,11 +73,13 @@ export function NewProduct() {
   } = useForm({
     resolver: yupResolver(schema),
   });
+
   const onSubmit = async (data) => {
     const productFormData = new FormData();
 
     productFormData.append('name', data.name);
-    productFormData.append('price', data.price);
+    // CORREÇÃO AQUI: Multiplicar por 100 para enviar centavos à API
+    productFormData.append('price', Math.round(data.price * 100));
     productFormData.append('category_id', data.category.id);
     productFormData.append('file', data.file[0]);
     productFormData.append('offer', data.offer);
@@ -101,7 +106,11 @@ export function NewProduct() {
 
         <InputGroup>
           <Label>Preço</Label>
-          <Input type="number" {...register('price')} />
+          <Input
+            type="number"
+            step="any" // CORREÇÃO AQUI: Evita o erro de validação do navegador
+            {...register('price')}
+          />
           <ErrorMessage>{errors?.price?.message}</ErrorMessage>
         </InputGroup>
 
@@ -141,6 +150,7 @@ export function NewProduct() {
           />
           <ErrorMessage>{errors?.category?.message}</ErrorMessage>
         </InputGroup>
+
         <InputGroup>
           <ContainerCheckbox>
             <input type="checkbox" {...register('offer')} />

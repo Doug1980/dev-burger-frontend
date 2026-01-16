@@ -8,6 +8,8 @@ import Logo from '../../assets/logo.svg';
 import { Button } from '../../components/Button';
 import { useUser } from '../../hooks/UserContext';
 import { api } from '../../services/api';
+import BackgroundLogin from '../../assets/bg_login.svg';
+
 import {
   Container,
   Form,
@@ -16,6 +18,7 @@ import {
   RightContainer,
   Title,
   Link,
+  Header,
 } from './styles';
 
 export function Login() {
@@ -55,21 +58,19 @@ export function Login() {
           render() {
             setTimeout(() => {
               if (userData?.admin) {
-                navigate('/admin/pedidos')
+                navigate('/admin/pedidos');
               } else {
                 navigate('/');
               }
             }, 2000);
             return 'Seja bem-vindo(a) 👌';
           },
-
         },
         error: 'E-mail ou senha Incorretos 🤯',
       },
     );
 
     putUserData(userData);
-
   };
 
   return (
@@ -78,11 +79,16 @@ export function Login() {
         <img src={Logo} alt="logo-devburguer" />
       </LeftContainer>
       <RightContainer>
-        <Title>
-          Olá, seja bem vindo ao <span>Dev Burguer</span>
-          <br />
-          Acesse com seu<span> Login e senha.</span>
-        </Title>
+        <Header>
+          <img src={Logo} alt="Dev Burguer" />
+
+          <Title>
+            Olá, seja bem vindo ao <span>Dev Burguer</span>
+            <br />
+            Acesse com seu <span>Login</span> e senha.
+          </Title>
+        </Header>
+
         <Form onSubmit={handleSubmit(onSubmit)}>
           <InputContainer>
             <label>E-mail</label>

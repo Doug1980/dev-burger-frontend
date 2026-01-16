@@ -89,7 +89,8 @@ export function Row({ row, setOrders, orders }) {
                   {row.products.map((product) => (
                     <TableRow key={product.id}>
                       <TableCell component="th" scope="row">
-                        {product.id}
+                        {product.quantity}{' '}
+                        {/* ✅ AGORA VAI MOSTRAR 1, 2, 3... */}
                       </TableCell>
                       <TableCell>{product.name}</TableCell>
                       <TableCell>{product.category}</TableCell>

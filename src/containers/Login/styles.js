@@ -10,6 +10,24 @@ export const Container = styled.div`
     width: 100vw;
 `;
 
+export const Header = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 30px;
+
+  img {
+    width: 160px;
+  }
+
+  @media (max-width: 768px) {
+    img {
+      width: 120px;
+    }
+  }
+`;
+
 export const LeftContainer = styled.div`
     background: url('${BackgroundLogin}');
     background-size: cover;
@@ -26,7 +44,11 @@ export const LeftContainer = styled.div`
     img {
         width: 60%;
     }
-    
+
+    /* 📱 MOBILE */
+    @media (max-width: 768px) {
+        display: none;
+    }
 `;
 
 export const RightContainer = styled.div`
@@ -43,14 +65,20 @@ export const RightContainer = styled.div`
     background-color: #1e1e1e;
     background-size: 1200px;
 
-    p{
+    p {
       color: #fff;
       font-size: 18px;
       font-weight: 800;
-      
-      a{
+
+      a {
         text-decoration: underline;
       }
+    }
+
+    /* 📱 MOBILE */
+    @media (max-width: 768px) {
+        max-width: 100%;
+        background-size: cover;
     }
 `;
 
@@ -108,4 +136,13 @@ export const InputContainer = styled.div`
 export const Link = styled(ReactLink)`
     text-decoration: none;
     color: #fff;
+`;
+
+export const LogoWrapper = styled.div`
+  background: url('${BackgroundLogin}');
+  background-size: cover;
+  background-position: center;
+
+  padding: 24px 32px;
+  border-radius: 12px;
 `;

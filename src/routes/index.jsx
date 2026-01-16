@@ -1,9 +1,9 @@
 import { Route, Routes } from 'react-router-dom';
-
 import {
   Cart,
   Checkout,
   CompletePayment,
+  DeliveryStatus,
   EditProduct,
   Home,
   Login,
@@ -26,6 +26,8 @@ export function Router() {
         <Route path="carrinho" element={<Cart />} />
         <Route path="checkout" element={<Checkout />} />
         <Route path="completepayment" element={<CompletePayment />} />
+        {/* A rota deve ficar aqui dentro para ter Header/Footer */}
+        <Route path="deliveryStatus" element={<DeliveryStatus />} />
       </Route>
 
       <Route path="/admin" element={<AdminLayout />}>

@@ -24,20 +24,24 @@ const schema = yup.object({
   name: yup.string().required('Digite o nome do produto'),
   price: yup
     .number()
-    .positive()
+    .transform((value, originalValue) => {
+      if (typeof originalValue === 'string') {
+        return parseFloat(originalValue.replace(',', '.'));
+      }
+      return value;
+    })
+    .positive('O preço deve ser positivo')
     .required('Digite o preço do produto')
-    .typeError('Digite o preço do produto'),
+    .typeError('Digite um preço válido'),
   category: yup.object().required('Selecione a categoria'),
   offer: yup.bool(),
-  file: yup.mixed().notRequired(), // 👈 ESSENCIAL
+  file: yup.mixed().notRequired(),
 });
 
 export function EditProduct() {
   const [fileName, setFileName] = useState(null);
   const [categories, setCategories] = useState([]);
-
   const navigate = useNavigate();
-
   const {
     state: { product },
   } = useLocation();
@@ -45,9 +49,7 @@ export function EditProduct() {
   useEffect(() => {
     async function loadCategories() {
       const { data } = await api.get('/categories');
-
-      console.log('Categorias carregadas:', data);
-      setCategories(data); // 👈 ISSO ESTAVA FALTANDO
+      setCategories(data);
     }
     loadCategories();
   }, []);
@@ -60,16 +62,16 @@ export function EditProduct() {
   } = useForm({
     resolver: yupResolver(schema),
   });
+
   const onSubmit = async (data) => {
     const productFormData = new FormData();
 
     productFormData.append('name', data.name);
-    productFormData.append('price', Number(data.price) * 100);
+    // Convertemos para centavos para o Back-end
+    productFormData.append('price', Math.round(data.price * 100));
     productFormData.append('category_id', data.category.id);
-    // productFormData.append('file', data.file[0]);
     productFormData.append('offer', data.offer);
 
-    // 🚨 ESSENCIAL
     if (data.file && data.file.length > 0) {
       productFormData.append('file', data.file[0]);
     }
@@ -88,6 +90,7 @@ export function EditProduct() {
   return (
     <Container>
       <Form onSubmit={handleSubmit(onSubmit)}>
+        {/* CAMPO NOME - Adicionado novamente */}
         <InputGroup>
           <Label>Nome</Label>
           <Input
@@ -98,10 +101,12 @@ export function EditProduct() {
           <ErrorMessage>{errors?.name?.message}</ErrorMessage>
         </InputGroup>
 
+        {/* CAMPO PREÇO - Único e corrigido com step="any" */}
         <InputGroup>
           <Label>Preço</Label>
           <Input
             type="number"
+            step="any" // "any" é mais seguro que "0.01" para liberar qualquer decimal
             {...register('price')}
             defaultValue={product.price / 100}
           />
@@ -115,9 +120,8 @@ export function EditProduct() {
               type="file"
               {...register('file')}
               accept="image/png, image/jpeg"
-              onChange={(value) => {
-                setFileName(value.target.files[0]?.name);
-                register('file').onChange(value);
+              onChange={(e) => {
+                setFileName(e.target.files[0]?.name);
               }}
             />
             {fileName || 'Upload Imagem do Produto'}
@@ -145,6 +149,7 @@ export function EditProduct() {
           />
           <ErrorMessage>{errors?.category?.message}</ErrorMessage>
         </InputGroup>
+
         <InputGroup>
           <ContainerCheckbox>
             <input
@@ -155,6 +160,7 @@ export function EditProduct() {
             <Label>Produto em Oferta?</Label>
           </ContainerCheckbox>
         </InputGroup>
+
         <SubmitButton>Editar Produto</SubmitButton>
       </Form>
     </Container>
