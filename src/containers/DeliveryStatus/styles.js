@@ -1,11 +1,22 @@
 import styled, { keyframes } from 'styled-components';
+import Background from '../../assets/background.svg'; // Ajuste o caminho conforme sua pasta
 
-export const Container = styled.div`
+export const Container = styled.section`
+  background: linear-gradient(
+      rgba(255, 255, 255, 0.6),
+      rgba(255, 255, 255, 0.6)
+    ),
+    url(${Background});
+  
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed; /* Opcional: mantém o fundo parado ao rolar */
+  
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  width: 100%; /* Use 100% em vez de 100vw para evitar conflito com a barra vertical */
-  overflow-x: hidden; /* Corta qualquer transbordamento acidental lateral */
+  width: 100%;
+  overflow-x: hidden;
 `;
 
 export const Content = styled.div`
@@ -14,8 +25,9 @@ export const Content = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
-  max-width: 100vw; /* Garante que o conteúdo não passe da largura da janela */
-  padding: 40px 10px; /* Reduzimos um pouco o padding lateral */
+  max-width: 1280px; /* Ou a largura que preferir */
+  margin: 0 auto;
+  padding: 40px 20px;
 `;
 
 export const OrderInfo = styled.div`
@@ -59,10 +71,10 @@ export const Step = styled.div`
 
   p {
     margin-top: 10px;
-    font-size: 13px;
+    font-size: 14px;
     text-align: center; /* Garante que o texto fique no meio do círculo */
     color: ${(props) => (props.active ? '#9758a6' : '#666')};
-    font-weight: ${(props) => (props.active ? 'bold' : 'normal')};
+    font-weight: bold;
     /* Remova o white-space: nowrap se o texto for muito grande */
   }
 `;

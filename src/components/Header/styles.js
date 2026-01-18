@@ -81,44 +81,47 @@ export const HeaderLink = styled(Link)`
 `;
 
 export const Options = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 42px;
-
+  display: flex;
+  align-items: center;
+  gap: 25px; 
 `;
 
 export const Profile = styled.div`
-    display: flex;
-    align-items: center;
-    gap: 12px;  
-    font-size: 14px;
-    margin-top: 30px;
-
-    div {
-        font-size: 16px;
-        color: #fff;
-        line-height: 90%;
-        font-weight: 300;
-        
-        
-        span {
-            font-size: 16px;
-            font-weight: 700;
-            color: #9758a6;
-        }
-    }
-
+  display: flex;
+  align-items: center;
+  gap: 12px;  
+  font-size: 14px;
+  /* margin-top: 30px;  <-- Certifique-se de que removeu isso */
+  
+  div {
+      color: #fff;
+      line-height: 1.2;
+      
+      span {
+          font-weight: 700;
+          color: #9758a6;
+      }
+  }
 `;
 
 export const LinkContainer = styled(Link)`
   display: flex;
   align-items: center;
   gap: 10px;
-
   color: #fff;
   text-decoration: none;
   cursor: pointer;
+
+  /* Estilização da borda ativa */
+  border-bottom: ${(props) => (props.$isActive ? '3px solid #9758a6' : 'none')};
+  
+  /* Aproxima a linha da fonte: 
+     Diminuir este valor traz a linha para cima. 
+  */
+  padding-bottom: 3px; 
+  
+  /* Ajusta a largura da borda para não vazar lateralmente */
+  width: fit-content;
 
   svg {
     font-size: 22px;
@@ -130,6 +133,8 @@ export const LinkContainer = styled(Link)`
     font-size: 22px;
     color: #fff;
     white-space: nowrap;
+    /* Garante que o texto não tenha margens internas que afastem a linha */
+    line-height: 100%; 
   }
 
   &:hover {
@@ -140,12 +145,18 @@ export const LinkContainer = styled(Link)`
     span {
       font-size: 16px;
     }
-
-    svg {
-      font-size: 18px;
-    }
   }
 `;
+
+// Adicione este no styles.js
+export const ActionsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 20px;
+`;
+
 
 export const Logout = styled.button`
   background: none;
@@ -158,6 +169,7 @@ export const Logout = styled.button`
 
   &:hover {
     text-decoration: underline;
+    
   }
 `;
 
