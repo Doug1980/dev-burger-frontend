@@ -104,12 +104,17 @@ export function Register() {
             <p>{errors?.confirmPassword?.message}</p>
           </InputContainer>
 
-          <Button type="submit">Criar Conta</Button>
-        </Form>
-
-        <p>
+          <InputContainer>
+           <Button type="submit">Criar Conta</Button>
+<p>
           Já possui conta? <Link to="/login">Clique aqui.</Link>
         </p>
+          </InputContainer>
+
+         
+        </Form>
+
+        
       </RightContainer>
     </Container>
   );

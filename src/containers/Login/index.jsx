@@ -1,4 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useEffect } from 'react'; // Adicione o useEffect aqui
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -8,7 +9,6 @@ import Logo from '../../assets/logo.svg';
 import { Button } from '../../components/Button';
 import { useUser } from '../../hooks/UserContext';
 import { api } from '../../services/api';
-import BackgroundLogin from '../../assets/bg_login.svg';
 
 import {
   Container,
@@ -21,9 +21,15 @@ import {
   Header,
 } from './styles';
 
+
+
+
+
+
 export function Login() {
   const navigate = useNavigate();
-  const { putUserData } = useUser();
+  const { putUserData, userInfo } = useUser(); // Pegue o userInfo aqui
+  
 
   const schema = yup
     .object({
@@ -47,31 +53,48 @@ export function Login() {
   });
 
   const onSubmit = async (data) => {
-    const { data: userData } = await toast.promise(
-      api.post('/sessions', {
-        email: data.email,
-        password: data.password,
-      }),
-      {
-        pending: 'Verificando os dados',
-        success: {
-          render() {
-            setTimeout(() => {
-              if (userData?.admin) {
-                navigate('/admin/pedidos');
-              } else {
-                navigate('/');
-              }
-            }, 2000);
-            return 'Seja bem-vindo(a) 👌';
-          },
-        },
-        error: 'E-mail ou senha Incorretos 🤯',
-      },
-    );
+    try {
+      const response = await toast.promise(
+        api.post('/sessions', {
+          email: data.email,
+          password: data.password,
+        }),
+        {
+          pending: 'Verificando os dados',
+          success: 'Seja bem-vindo(a) 👌',
+          error: 'E-mail ou senha Incorretos 🤯',
+        }
+      );
 
-    putUserData(userData);
+      const userData = response.data;
+      
+      // Primeiro salvamos os dados no contexto
+      await putUserData(userData);
+
+      // Depois redirecionamos dependendo de quem é o usuário
+      setTimeout(() => {
+        if (userData?.admin) {
+          navigate('/admin/pedidos');
+        } else {
+          navigate('/');
+        }
+      }, 1000);
+      
+    } catch (error) {
+       // O toast já trata o erro visualmente
+    }
   };
+
+
+  useEffect(() => {
+  if (userInfo) {
+    if (userInfo.admin) {
+      navigate('/admin/pedidos', { replace: true });
+    } else {
+      navigate('/', { replace: true });
+    }
+  }
+}, [userInfo, navigate]);
 
   return (
     <Container>
@@ -81,7 +104,6 @@ export function Login() {
       <RightContainer>
         <Header>
           <img src={Logo} alt="Dev Burguer" />
-
           <Title>
             Olá, seja bem vindo ao <span>Dev Burguer</span>
             <br />

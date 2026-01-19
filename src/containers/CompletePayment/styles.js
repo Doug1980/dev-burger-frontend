@@ -1,14 +1,21 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import Background from '../../assets/background.svg'; // Ajuste o caminho conforme sua pasta
 
 export const Container = styled.div`
   min-height: 100vh;
   width: 100%;
+  
   background: linear-gradient(
-      rgba(255, 255, 255, 0.85),
-      rgba(255, 255, 255, 0.85)
+      rgba(255, 255, 255, 0.6),
+      rgba(255, 255, 255, 0.6)
     ),
-    ${({ theme }) => theme.background};
+    url(${Background});
+
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+
 
   display: flex;
   align-items: center;

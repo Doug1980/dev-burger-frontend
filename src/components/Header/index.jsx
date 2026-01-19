@@ -1,4 +1,4 @@
-import { useNavigate, useResolvedPath } from 'react-router-dom'; // 1. Certifique-se do import correto
+import { useNavigate, useResolvedPath } from 'react-router-dom';
 import { FaUserCircle } from 'react-icons/fa';
 import { TiShoppingCart } from 'react-icons/ti';
 import { MdDeliveryDining } from 'react-icons/md';
@@ -13,17 +13,17 @@ import {
   Options,
   Profile,
   Content,
-  ActionsContainer, // 2. Importe o novo container
+  ActionsContainer,
 } from './styles';
 
 export function Header() {
-  const navigate = useNavigate(); // 3. Agora o erro de "not defined" vai sumir
+  const navigate = useNavigate();
   const { logout, userInfo } = useUser();
   const { pathname } = useResolvedPath();
 
-  function logoutUser() {
-    logout();
-    navigate('/login');
+  async function logoutUser() {
+    await logout(); // Executa a limpeza dos dados no LocalStorage e Contexto
+    navigate('/login', { replace: true }); // Redireciona e substitui a Home no histórico
   }
 
   return (
@@ -31,8 +31,12 @@ export function Header() {
       <Content>
         <Navigation>
           <div>
-            <HeaderLink to="/" $isActive={pathname === '/'}>Home</HeaderLink>
-            <HeaderLink to="/cardapio" $isActive={pathname === '/cardapio'}>Cardápio</HeaderLink>
+            <HeaderLink to="/" $isActive={pathname === '/'}>
+              Home
+            </HeaderLink>
+            <HeaderLink to="/cardapio" $isActive={pathname === '/cardapio'}>
+              Cardápio
+            </HeaderLink>
           </div>
         </Navigation>
 
@@ -40,6 +44,7 @@ export function Header() {
           <Profile>
             <FaUserCircle color="#fff" size={35} />
             <div>
+              {/* Usamos a interrogação para evitar erros se o userInfo for nulo no segundo do logout */}
               <p>Olá, <span>{userInfo?.name}</span></p>
               <Logout onClick={logoutUser}>Sair</Logout>
             </div>
@@ -53,7 +58,7 @@ export function Header() {
 
             <LinkContainer to="/deliveryStatus" $isActive={pathname === '/deliveryStatus'}>
               <MdDeliveryDining />
-              <span>Status do Pedido</span>
+              <span>Status do pedido</span>
             </LinkContainer>
           </ActionsContainer>
         </Options>

@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { FaCheckCircle } from 'react-icons/fa';
+
 import {
   Container,
   Content,

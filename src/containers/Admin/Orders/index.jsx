@@ -5,35 +5,35 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import { useEffect } from 'react';
+import { useEffect, useState, useCallback } from 'react'; // Adicionado useCallback
 import { orderStatusOptions } from './orderStatus';
 
 import { api } from '../../../services/api';
 import { Row } from './row';
-import { useState } from 'react';
 import { FilterOption, Filter } from './styles';
 
 export function Orders() {
   const [orders, setOrders] = useState([]);
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [activeStatus, setActiveStatus] = useState(0);
-
   const [rows, setRows] = useState([]);
 
+  // 1. Carrega os pedidos
   useEffect(() => {
     async function loadOrders() {
-      const { data } = await api.get('orders');
-
-      setOrders(data);
-      setFilteredOrders(data);
-
-      console.log(data);
+      try {
+        const { data } = await api.get('orders');
+        setOrders(data);
+        setFilteredOrders(data);
+      } catch (err) {
+        console.error("Erro ao carregar pedidos:", err);
+      }
     }
-
     loadOrders();
   }, []);
 
-  function createData(order) {
+  // 2. Função de formatação (Memorizada para evitar renders extras)
+  const createData = useCallback((order) => {
     return {
       name: order.user.name,
       orderId: order._id,
@@ -41,40 +41,33 @@ export function Orders() {
       status: order.status,
       products: order.products,
     };
-  }
+  }, []);
 
+  // 3. Lógica de Filtragem e Formatação unificada
+  // Isso evita o erro de "changed size between renders"
   useEffect(() => {
-    const newRows = filteredOrders.map((order) => createData(order));
+    let newFilteredOrders = [...orders];
 
+    if (activeStatus !== 0) {
+      const statusOption = orderStatusOptions.find(item => item.id === activeStatus);
+      if (statusOption) {
+        newFilteredOrders = orders.filter(
+          (order) => order.status === statusOption.value
+        );
+      }
+    }
+
+    setFilteredOrders(newFilteredOrders);
+    
+    // Já aproveitamos para gerar as linhas da tabela aqui mesmo
+    const newRows = newFilteredOrders.map((order) => createData(order));
     setRows(newRows);
-  }, [filteredOrders]);
+
+  }, [orders, activeStatus, createData]);
 
   function handleStatus(status) {
-    if (status.id === 0) {
-      setFilteredOrders(orders);
-    } else {
-      const newOrders = orders.filter((order) => order.status === status.value);
-
-      setFilteredOrders(newOrders);
-    }
     setActiveStatus(status.id);
   }
-
-  useEffect(() => {
-    if (activeStatus === 0) {
-      setFilteredOrders(orders);
-    } else {
-      const statusIndex = orderStatusOptions.findLastIndex(
-        (item) => item.id === activeStatus,
-      );
-
-      const newFilteredOrders = orders.filter(
-        (order) => order.status === orderStatusOptions[statusIndex].value,
-      );
-
-      setFilteredOrders(newFilteredOrders);
-    }
-  }, [orders]);
 
   return (
     <>

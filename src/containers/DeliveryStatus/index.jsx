@@ -2,6 +2,7 @@ import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../../services/api';
+import { useUser } from '../../hooks/UserContext'; // Importação necessária
 import {
   Container,
   StatusContainer,
@@ -10,16 +11,17 @@ import {
   OrderInfo,
   Content,
   FeedbackContainer,
+  FeedbackContainer1,
   Button,
 } from './styles';
 
 export const DeliveryStatus = () => {
+  const { userInfo } = useUser(); 
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Recupera o ID do pedido (via state ou localStorage como fallback)
-  const orderId =
-    location.state?.orderId || localStorage.getItem('lastOrderId');
+  // 1. Pega o ID se o usuário acabou de vir do carrinho
+  const orderIdFromState = location.state?.orderId;
 
   const statusMap = [
     { label: 'Pedido Realizado', value: 'Pedido Realizado' },
@@ -29,43 +31,42 @@ export const DeliveryStatus = () => {
     { label: 'Pedido Entregue', value: 'Pedido Entregue' },
   ];
 
-  // Implementação do React Query
-  const {
-    data: order,
-    isLoading,
-    error,
-  } = useQuery({
-    queryKey: ['orderStatus', orderId],
-    queryFn: async () => {
-      const userDataJson = localStorage.getItem('devburguer:userData');
-      const userData = userDataJson ? JSON.parse(userDataJson) : null;
-      const token = userData?.token;
+  // 2. UNIFICADO: Busca o pedido específico OU o último do usuário logado
+  const { data: order, isLoading, error } = useQuery({
+  queryKey: ['orderStatus', orderIdFromState, userInfo?.id],
+  queryFn: async () => {
+    const token = userInfo?.token;
+    if (!token) throw new Error('Token não encontrado');
 
-      if (!token) throw new Error('Token não encontrado');
+    // Se tiver ID do state (veio do checkout), busca o específico
+    // Se não, busca na rota geral (que agora já vem filtrada pelo Back-end)
+    const url = orderIdFromState ? `/orders/${orderIdFromState}` : `/orders`;
 
-      const response = await api.get(`/orders/${orderId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+    const response = await api.get(url, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
-      return response.data;
-    },
-    enabled: !!orderId, // Só executa se houver um orderId
-    refetchInterval: (data) => {
-      // Para se estiver Entregue OU Cancelado
-      if (
-        data?.status === 'Pedido Entregue' ||
-        data?.status === 'Pedido Cancelado'
-      ) {
-        return false;
-      }
-      return 5000;
-    },
-  });
+    // Se a resposta for um array (veio do /orders), pegamos o primeiro (mais recente)
+    if (Array.isArray(response.data)) {
+      return response.data[0];
+    }
+
+    return response.data;
+  },
+  enabled: !!userInfo?.id,
+  refetchInterval: (query) => {
+    const data = query.state.data;
+    if (data?.status === 'Pedido Entregue' || data?.status === 'Pedido Cancelado') {
+      return false;
+    }
+    return 5000;
+  },
+});
 
   if (isLoading) {
     return (
       <Container>
-        <p>Carregando status do pedido...</p>
+        <p style={{ marginTop: '100px' }}>Carregando status do pedido...</p>
       </Container>
     );
   }
@@ -73,24 +74,24 @@ export const DeliveryStatus = () => {
   if (error || !order) {
     return (
       <Container>
-        <p>
-          Erro ao carregar informações do pedido. Tente novamente mais tarde.
+        <p style={{ marginTop: '100px', marginBottom: '50px',fontSize: '25px' }}>
+          Nenhum pedido encontrado para este perfil.
         </p>
+        <Button onClick={() => navigate('/cardapio')}>Ir para o Cardápio</Button>
       </Container>
     );
   }
 
-  // Lógica da Timeline baseada no status vindo da API
   const currentStepIndex = statusMap.findIndex((s) => s.value === order.status);
+  const displayId = order._id || order.id;
 
   return (
     <Container>
       <OrderInfo>
         <h2>Acompanhe seu Pedido</h2>
-        <p>ID: {orderId}</p>
+        <p>ID: {displayId}</p>
       </OrderInfo>
 
-      {/* 1. Timeline com atualização automática */}
       <StatusContainer>
         {statusMap.map((step, index) => (
           <React.Fragment key={step.value}>
@@ -105,50 +106,28 @@ export const DeliveryStatus = () => {
         ))}
       </StatusContainer>
 
-      {/* 2. Conteúdo de Feedback */}
       <Content>
         {order?.status === 'Pedido Entregue' && (
           <FeedbackContainer>
             <h3>✅ Pedido entregue com sucesso!</h3>
             <p>
-              Obrigado pela sua preferência, <strong>{order.user?.name}</strong>
-              !
+              Obrigado pela sua preferência, <strong>{userInfo?.name}</strong>!
               <br />
               Sua confirmação é muito importante para nós. Volte sempre!
             </p>
-
-            <Button
-              style={{ marginTop: '25px', width: '250px' }}
-              onClick={() => navigate('/cardapio')}
-            >
-              Pedir novamente
-            </Button>
+            <Button onClick={() => navigate('/cardapio')}>Pedir novamente</Button>
           </FeedbackContainer>
         )}
 
-        {/* NOVO: Feedback de Cancelamento */}
         {order?.status === 'Pedido Cancelado' && (
-          <FeedbackContainer style={{ border: '4px solid #ff4444' }}>
-            <h3 style={{ color: '#ff4444' }}>❌ Pedido Cancelado</h3>
+          <FeedbackContainer1>
+            <h3>❌ Pedido Cancelado</h3>
             <p>
-              Olá <strong>{order.user?.name}</strong>, conforme a solicitado,
-              seu pedido foi cancelado.
-              <br />
-              Dúvidas? Estamos à disposição pelo telefone ou WhatsApp. Obrigado
-              pela preferência!
+              Olá <strong>{userInfo?.name}</strong>, sua solicitação foi atendida. <br/>
+             Dúvidas? Entre em contato conosco pelo telefone ou Whatsapp.
             </p>
-
-            <Button
-              style={{
-                marginTop: '25px',
-                width: '250px',
-                backgroundColor: '#9758a6',
-              }}
-              onClick={() => navigate('/cardapio')}
-            >
-              Voltar ao cardápio
-            </Button>
-          </FeedbackContainer>
+            <Button onClick={() => navigate('/cardapio')}>Voltar ao cardápio</Button>
+          </FeedbackContainer1>
         )}
       </Content>
     </Container>

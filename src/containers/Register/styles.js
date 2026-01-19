@@ -86,8 +86,8 @@ export const InputContainer = styled.div`
   }
 
   p {
-    color: #ff4d4d;
-    font-size: 12px;
+    color: #fff;
+    font-size: 15px;
     margin-top: 4px;
   }
 `;
@@ -97,6 +97,7 @@ export const Link = styled(ReactLink)`
   font-weight: 600;
   margin-left: 4px;
   text-decoration: none;
+  
 
   &:hover {
     text-decoration: underline;
