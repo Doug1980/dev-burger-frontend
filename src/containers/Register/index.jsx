@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import * as yup from 'yup';
 
-import Logo from '../../assets/logo.svg';
+import Logo from '../../assets/Logo.svg';
 import { Button } from '../../components/Button';
 import { api } from '../../services/api';
 
@@ -105,16 +105,12 @@ export function Register() {
           </InputContainer>
 
           <InputContainer>
-           <Button type="submit">Criar Conta</Button>
-<p>
-          Já possui conta? <Link to="/login">Clique aqui.</Link>
-        </p>
+            <Button type="submit">Criar Conta</Button>
+            <p>
+              Já possui conta? <Link to="/login">Clique aqui.</Link>
+            </p>
           </InputContainer>
-
-         
         </Form>
-
-        
       </RightContainer>
     </Container>
   );
