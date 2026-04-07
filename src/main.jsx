@@ -9,7 +9,7 @@ import { ThemeProvider } from 'styled-components';
 // 1. Importações do React Query
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-import stripePromise from './config/stripeconfig';
+import stripePromise from './config/stripeConfig';
 import AppProvider from './hooks';
 import { Router } from './routes';
 import GlobalStyles from './styles/globalStyles';
