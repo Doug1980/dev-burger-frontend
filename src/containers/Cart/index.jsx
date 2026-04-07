@@ -1,5 +1,5 @@
 import { SlActionUndo } from 'react-icons/sl';
-import Logo from '../../assets/logo.svg';
+import Logo from '../../assets/Logo.svg';
 import { CartItems, CartResume } from '../../components';
 import { Banner, Container, Content, Title, CartHeader } from './styles';
 import { useNavigate } from 'react-router-dom';

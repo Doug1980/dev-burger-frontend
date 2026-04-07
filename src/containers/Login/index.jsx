@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import * as yup from 'yup';
 
-import Logo from '../../assets/logo.svg';
+import Logo from '../../assets/Logo.svg';
 import { Button } from '../../components/Button';
 import { useUser } from '../../hooks/UserContext';
 import { api } from '../../services/api';
@@ -21,15 +21,9 @@ import {
   Header,
 } from './styles';
 
-
-
-
-
-
 export function Login() {
   const navigate = useNavigate();
   const { putUserData, userInfo } = useUser(); // Pegue o userInfo aqui
-  
 
   const schema = yup
     .object({
@@ -63,11 +57,11 @@ export function Login() {
           pending: 'Verificando os dados',
           success: 'Seja bem-vindo(a) 👌',
           error: 'E-mail ou senha Incorretos 🤯',
-        }
+        },
       );
 
       const userData = response.data;
-      
+
       // Primeiro salvamos os dados no contexto
       await putUserData(userData);
 
@@ -79,22 +73,20 @@ export function Login() {
           navigate('/');
         }
       }, 1000);
-      
     } catch (error) {
-       // O toast já trata o erro visualmente
+      // O toast já trata o erro visualmente
     }
   };
 
-
   useEffect(() => {
-  if (userInfo) {
-    if (userInfo.admin) {
-      navigate('/admin/pedidos', { replace: true });
-    } else {
-      navigate('/', { replace: true });
+    if (userInfo) {
+      if (userInfo.admin) {
+        navigate('/admin/pedidos', { replace: true });
+      } else {
+        navigate('/', { replace: true });
+      }
     }
-  }
-}, [userInfo, navigate]);
+  }, [userInfo, navigate]);
 
   return (
     <Container>
