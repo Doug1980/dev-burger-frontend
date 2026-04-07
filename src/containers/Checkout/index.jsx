@@ -1,7 +1,7 @@
 import { Elements } from '@stripe/react-stripe-js';
 import { useLocation } from 'react-router-dom';
 import CheckoutForm from '../../components/Stripe/CheckoutForm';
-import stripePromise from '../../config/stripeconfig';
+import stripePromise from '../../config/stripeConfig';
 
 // Importe apenas os estilos, sem duplicar Header e Footer aqui
 import { Container, MainContent } from './styles';
