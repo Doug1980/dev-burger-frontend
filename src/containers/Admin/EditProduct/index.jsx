@@ -122,6 +122,7 @@ export function EditProduct() {
               accept="image/png, image/jpeg"
               onChange={(e) => {
                 setFileName(e.target.files[0]?.name);
+                register('file').onChange(e);
               }}
             />
             {fileName || 'Upload Imagem do Produto'}
