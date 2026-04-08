@@ -1,13 +1,13 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
-export const Container = styled.div `
+export const Container = styled.div`
     display: flex;
     
     flex-direction: column;
     align-items: center;
     gap: 50px;
     padding: 20px;
-    border-radius: 8px;
+    border-radius: 12px;
     background-color: #ffffff;
     cursor: grab;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
@@ -41,7 +41,7 @@ export const Container = styled.div `
 
 `;
 
-export const CardImage = styled.img `
+export const CardImage = styled.img`
     height:100px;
     position: absolute;
     top: -50px;
