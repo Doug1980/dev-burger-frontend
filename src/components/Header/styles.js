@@ -55,16 +55,13 @@ export const Navigation = styled.nav`
 `;
 
 export const HeaderLink = styled(Link)`
-  color: ${(props) =>
-    props.$isActive ? props.theme.purple : props.theme.white};
+  color: ${(props) => (props.$isActive ? props.theme.purple : props.theme.white)};
   border-bottom: ${(props) => (props.$isActive ? '3px solid #9758a6' : 'none')};
   text-decoration: none;
   font-size: 30px;
   transition: color 200ms;
 
-  &:hover {
-    color: #9758a6;
-  }
+  &:hover { color: #9758a6; }
 
   @media (max-width: 768px) {
     font-size: 18px;
@@ -92,11 +89,14 @@ export const Profile = styled.div`
   div {
     color: #fff;
     line-height: 1.2;
-
     span {
       font-weight: 700;
       color: #9758a6;
     }
+  }
+
+  @media (max-width: 768px) {
+    display: none;
   }
 `;
 
@@ -148,17 +148,11 @@ export const LinkContainer = styled(Link)`
     line-height: 100%;
   }
 
-  &:hover {
-    opacity: 0.85;
-  }
+  &:hover { opacity: 0.85; }
 
   @media (max-width: 768px) {
-    span {
-      font-size: 14px;
-    }
-    svg {
-      font-size: 18px;
-    }
+    span { font-size: 14px; }
+    svg { font-size: 18px; }
   }
 `;
 
@@ -183,9 +177,7 @@ export const Logout = styled.button`
   padding: 0;
   margin-top: 2px;
 
-  &:hover {
-    text-decoration: underline;
-  }
+  &:hover { text-decoration: underline; }
 `;
 
 export const Header = styled.div`
