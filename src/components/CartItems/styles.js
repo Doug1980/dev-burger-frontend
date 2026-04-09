@@ -60,7 +60,7 @@ export const MobileCard = styled.div`
     border-radius: 12px;
     padding: 12px;
     margin-bottom: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
   }
 `;
 
