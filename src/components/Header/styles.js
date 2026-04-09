@@ -41,7 +41,7 @@ export const Navigation = styled.nav`
   }
 
   @media (max-width: 768px) {
-    display: none;
+    display: none; 
   }
 `;
 
@@ -100,6 +100,10 @@ export const TopRow = styled.div`
     align-items: center;
     justify-content: space-between;
     padding-bottom: 8px;
+
+    nav {
+      display: flex !important;
+    }
 
     & > div {
       display: flex !important;
