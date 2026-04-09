@@ -49,12 +49,12 @@ export const Navigation = styled.nav`
 
 export const HeaderLink = styled(Link)`
   color: ${(props) => (props.$isActive ? props.theme.purple : props.theme.white)};
-  border-bottom: ${(props) => (props.$isActive ? '3px solid #9758a6' : 'none')};
-  text-decoration: none;
+  text-decoration: ${(props) => (props.$isActive ? 'underline' : 'none')};
+  text-decoration-color: #9758a6;
+  text-underline-offset: 6px;
+  text-decoration-thickness: 3px;
   font-size: 30px;
   transition: color 200ms;
-  display: inline-block;
-  vertical-align: middle; /* 👈 adiciona isso */
 
   &:hover { color: #9758a6; }
 
