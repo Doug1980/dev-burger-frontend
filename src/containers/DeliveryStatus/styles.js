@@ -1,5 +1,5 @@
 import styled, { keyframes } from 'styled-components';
-import Background from '../../assets/background.svg'; 
+import Background from '../../assets/background.svg';
 
 // Animação para a mensagem aparecer suavemente
 const fadeIn = keyframes`
@@ -112,8 +112,23 @@ export const Button = styled.button`
 // Estilos adicionais mantidos para sua compatibilidade
 export const OrderInfo = styled.div`
   text-align: center;
-  margin-bottom: 50px;
-  h2 { color: #333; font-size: 40px; margin-bottom: 20px; }
+  margin-bottom: 30px;
+  h2 { 
+    color: #333; 
+    font-size: 40px; 
+    margin-bottom: 20px;
+
+    @media (max-width: 768px) {
+      font-size: 28px;
+    }
+  }
+
+  p {
+    @media (max-width: 768px) {
+      font-size: 13px;
+      word-break: break-all;
+    }
+  }
 `;
 
 export const StatusContainer = styled.div`
@@ -123,6 +138,13 @@ export const StatusContainer = styled.div`
   width: 100%;
   max-width: 1000px;
   margin-bottom: 40px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 0 20px;
+  }
 `;
 
 export const Line = styled.div`
@@ -134,6 +156,13 @@ export const Line = styled.div`
   margin-right: -40px;
   z-index: 1;
   transition: background 0.3s ease;
+
+  @media (max-width: 768px) {
+    width: 4px;
+    height: 30px;
+    flex: none;
+    margin: 0 0 0 28px;
+  }
 `;
 
 // E caso o erro peça também o "Step" e "StatusContainer", adicione-os:
@@ -164,5 +193,17 @@ export const Step = styled.div`
     text-align: center;
     color: ${(props) => (props.active ? '#9758a6' : '#666')};
     font-weight: bold;
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: row;
+    width: 100%;
+    gap: 15px;
+
+    p {
+      margin-top: 0;
+      text-align: left;
+      font-size: 15px;
+    }
   }
 `;
