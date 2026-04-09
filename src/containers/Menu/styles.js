@@ -170,19 +170,19 @@ export const ProductsContainer = styled.div`
   max-width: 1280px;
   margin: 50px auto;
 
-  /* 💻 Tablet */
   @media (max-width: 1024px) {
     grid-template-columns: repeat(2, 1fr);
     gap: 40px;
   }
 
-  /* 📱 Mobile */
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
     padding: 20px;
-    gap: 30px;
+    gap: 70px;        /* 👈 aumenta o gap para dar espaço para a imagem */
+    margin-top: 60px; /* 👈 espaço extra no topo */
   }
 `;
+
 export const GlobalStyle = createGlobalStyle`
   .swal2-popup {
     border-radius: 12px !important;
