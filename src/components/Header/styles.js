@@ -51,6 +51,7 @@ export const HeaderLink = styled(Link)`
   text-decoration: none;
   font-size: 30px;
   transition: color 200ms;
+  display: inline-block; /* 👈 adiciona isso */
 
   &:hover { color: #9758a6; }
 
