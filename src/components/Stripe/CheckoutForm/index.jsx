@@ -131,7 +131,7 @@ export default function CheckoutForm() {
         {message && <div id="payment-message">{message}</div>}
       </form>
       <p>
-        Os métodos de pagamento sao disponibilizados de acordo com a sua região.
+        Aceitamos os principais métodos de pagamento disponíveis na sua região.
       </p>
     </div>
   );
