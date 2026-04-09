@@ -30,6 +30,7 @@ export function Header() {
   return (
     <Container>
       <Content>
+        {/* Desktop */}
         <Navigation>
           <div>
             <HeaderLink to="/" $isActive={pathname === '/'}>
@@ -42,7 +43,7 @@ export function Header() {
         </Navigation>
 
         <Options>
-          {/* Desktop — layout original */}
+          {/* Desktop — perfil e ações */}
           <Profile>
             <FaUserCircle color="#fff" size={35} />
             <div>
@@ -66,8 +67,18 @@ export function Header() {
             </LinkContainer>
           </ActionsContainer>
 
-          {/* Mobile — linha de perfil */}
+          {/* Mobile — linha 1: nav + perfil */}
           <TopRow>
+            <Navigation>
+              <div>
+                <HeaderLink to="/" $isActive={pathname === '/'}>
+                  Home
+                </HeaderLink>
+                <HeaderLink to="/cardapio" $isActive={pathname === '/cardapio'}>
+                  Cardápio
+                </HeaderLink>
+              </div>
+            </Navigation>
             <Profile>
               <FaUserCircle color="#fff" size={28} />
               <div>
@@ -79,7 +90,7 @@ export function Header() {
             </Profile>
           </TopRow>
 
-          {/* Mobile — linha de ações */}
+          {/* Mobile — linha 2: ações */}
           <BottomRow>
             <LinkContainer to="/carrinho" $isActive={pathname === '/carrinho'}>
               <TiShoppingCart />

@@ -41,16 +41,7 @@ export const Navigation = styled.nav`
   }
 
   @media (max-width: 768px) {
-    width: 100%;
-    div {
-      flex-direction: row;
-      align-items: center;
-      gap: 16px;
-    }
-    div a:not(:last-child)::after {
-      content: '|';
-      margin-left: 16px;
-    }
+    display: none;
   }
 `;
 
