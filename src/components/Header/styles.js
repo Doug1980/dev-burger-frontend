@@ -38,10 +38,12 @@ export const Navigation = styled.nav`
     content: '|';
     margin-left: 12px;
     color: #999;
+    display: inline-block;
+    vertical-align: middle; /* 👈 adiciona isso */
   }
 
   @media (max-width: 768px) {
-    display: none; 
+    display: none;
   }
 `;
 
@@ -51,7 +53,8 @@ export const HeaderLink = styled(Link)`
   text-decoration: none;
   font-size: 30px;
   transition: color 200ms;
-  display: inline-block; /* 👈 adiciona isso */
+  display: inline-block;
+  vertical-align: middle; /* 👈 adiciona isso */
 
   &:hover { color: #9758a6; }
 
