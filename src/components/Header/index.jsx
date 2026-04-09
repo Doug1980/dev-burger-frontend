@@ -2,7 +2,6 @@ import { useNavigate, useResolvedPath } from 'react-router-dom';
 import { FaUserCircle } from 'react-icons/fa';
 import { TiShoppingCart } from 'react-icons/ti';
 import { MdDeliveryDining } from 'react-icons/md';
-
 import { useUser } from '../../hooks/UserContext';
 import {
   Container,
@@ -14,6 +13,8 @@ import {
   Profile,
   Content,
   ActionsContainer,
+  TopRow,
+  BottomRow,
 } from './styles';
 
 export function Header() {
@@ -22,8 +23,8 @@ export function Header() {
   const { pathname } = useResolvedPath();
 
   async function logoutUser() {
-    await logout(); // Executa a limpeza dos dados no LocalStorage e Contexto
-    navigate('/login', { replace: true }); // Redireciona e substitui a Home no histórico
+    await logout();
+    navigate('/login', { replace: true });
   }
 
   return (
@@ -41,26 +42,57 @@ export function Header() {
         </Navigation>
 
         <Options>
+          {/* Desktop — layout original */}
           <Profile>
             <FaUserCircle color="#fff" size={35} />
             <div>
-              {/* Usamos a interrogação para evitar erros se o userInfo for nulo no segundo do logout */}
-              <p>Olá, <span>{userInfo?.name}</span></p>
+              <p>
+                Olá, <span>{userInfo?.name}</span>
+              </p>
               <Logout onClick={logoutUser}>Sair</Logout>
             </div>
           </Profile>
-
           <ActionsContainer>
             <LinkContainer to="/carrinho" $isActive={pathname === '/carrinho'}>
               <TiShoppingCart />
               <span>Carrinho</span>
             </LinkContainer>
-
-            <LinkContainer to="/deliveryStatus" $isActive={pathname === '/deliveryStatus'}>
+            <LinkContainer
+              to="/deliveryStatus"
+              $isActive={pathname === '/deliveryStatus'}
+            >
               <MdDeliveryDining />
               <span>Status do pedido</span>
             </LinkContainer>
           </ActionsContainer>
+
+          {/* Mobile — linha de perfil */}
+          <TopRow>
+            <Profile>
+              <FaUserCircle color="#fff" size={28} />
+              <div>
+                <p>
+                  Olá, <span>{userInfo?.name}</span>
+                </p>
+                <Logout onClick={logoutUser}>Sair</Logout>
+              </div>
+            </Profile>
+          </TopRow>
+
+          {/* Mobile — linha de ações */}
+          <BottomRow>
+            <LinkContainer to="/carrinho" $isActive={pathname === '/carrinho'}>
+              <TiShoppingCart />
+              <span>Carrinho</span>
+            </LinkContainer>
+            <LinkContainer
+              to="/deliveryStatus"
+              $isActive={pathname === '/deliveryStatus'}
+            >
+              <MdDeliveryDining />
+              <span>Status do pedido</span>
+            </LinkContainer>
+          </BottomRow>
         </Options>
       </Content>
     </Container>

@@ -2,27 +2,25 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 export const Container = styled.div`
-    background-color: ${(props) => props.theme.mainBlack};
-    width: 100%;
-    height: 90px;
-    padding: 0 10px;   
-   
-     
+  background-color: ${(props) => props.theme.mainBlack};
+  width: 100%;
+  padding: 0 10px;
 `;
 
 export const Content = styled.div`
   width: 100%;
   max-width: 1280px;
   margin: 0 auto;
-
+  height: 90px;
   display: flex;
   align-items: center;
   justify-content: space-between;
 
-  @media (max-width: 480px) {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    align-items: center;
+  @media (max-width: 768px) {
+    height: auto;
+    flex-direction: column;
+    padding: 10px 0;
+    gap: 0;
   }
 `;
 
@@ -42,17 +40,16 @@ export const Navigation = styled.nav`
     color: #999;
   }
 
-  /* 📱 MOBILE */
   @media (max-width: 768px) {
+    width: 100%;
     div {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 2px; /* ✅ espaço real entre Home e Cardápio */
+      flex-direction: row;
+      align-items: center;
+      gap: 16px;
     }
-
     div a:not(:last-child)::after {
-      content: '';
-      margin: 0;
+      content: '|';
+      margin-left: 16px;
     }
   }
 `;
@@ -60,47 +57,70 @@ export const Navigation = styled.nav`
 export const HeaderLink = styled(Link)`
   color: ${(props) =>
     props.$isActive ? props.theme.purple : props.theme.white};
-
   border-bottom: ${(props) => (props.$isActive ? '3px solid #9758a6' : 'none')};
-
   text-decoration: none;
   font-size: 30px;
   transition: color 200ms;
-
-  margin-top: 0; /* ✅ REMOVE O PROBLEMA */
 
   &:hover {
     color: #9758a6;
   }
 
-  /* 📱 MOBILE */
   @media (max-width: 768px) {
-    font-size: 20px;
-    line-height: 35px;
+    font-size: 18px;
   }
 `;
 
 export const Options = styled.div`
   display: flex;
   align-items: center;
-  gap: 25px; 
+  gap: 25px;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    flex-direction: column;
+    gap: 0;
+  }
 `;
 
 export const Profile = styled.div`
   display: flex;
   align-items: center;
-  gap: 12px;  
+  gap: 12px;
   font-size: 14px;
-  /* margin-top: 30px;  <-- Certifique-se de que removeu isso */
-  
+
   div {
-      color: #fff;
-      line-height: 1.2;
-      
-      span {
-          font-weight: 700;
-          color: #9758a6;
-      }
+    color: #fff;
+    line-height: 1.2;
+
+    span {
+      font-weight: 700;
+      color: #9758a6;
+    }
+  }
+`;
+
+export const TopRow = styled.div`
+  display: none;
+
+  @media (max-width: 768px) {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 8px;
+  }
+`;
+
+export const BottomRow = styled.div`
+  display: none;
+
+  @media (max-width: 768px) {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+    border-top: 1px solid #333;
+    padding-top: 8px;
   }
 `;
 
@@ -111,16 +131,8 @@ export const LinkContainer = styled(Link)`
   color: #fff;
   text-decoration: none;
   cursor: pointer;
-
-  /* Estilização da borda ativa */
   border-bottom: ${(props) => (props.$isActive ? '3px solid #9758a6' : 'none')};
-  
-  /* Aproxima a linha da fonte: 
-     Diminuir este valor traz a linha para cima. 
-  */
-  padding-bottom: 3px; 
-  
-  /* Ajusta a largura da borda para não vazar lateralmente */
+  padding-bottom: 3px;
   width: fit-content;
 
   svg {
@@ -133,8 +145,7 @@ export const LinkContainer = styled(Link)`
     font-size: 22px;
     color: #fff;
     white-space: nowrap;
-    /* Garante que o texto não tenha margens internas que afastem a linha */
-    line-height: 100%; 
+    line-height: 100%;
   }
 
   &:hover {
@@ -143,20 +154,25 @@ export const LinkContainer = styled(Link)`
 
   @media (max-width: 768px) {
     span {
-      font-size: 16px;
+      font-size: 14px;
+    }
+    svg {
+      font-size: 18px;
     }
   }
 `;
 
-// Adicione este no styles.js
 export const ActionsContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
   justify-content: center;
   margin-top: 20px;
-`;
 
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
 
 export const Logout = styled.button`
   background: none;
@@ -169,7 +185,6 @@ export const Logout = styled.button`
 
   &:hover {
     text-decoration: underline;
-    
   }
 `;
 
