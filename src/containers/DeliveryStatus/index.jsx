@@ -2,7 +2,7 @@ import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../../services/api';
-import { useUser } from '../../hooks/UserContext'; // Importação necessária
+import { useUser } from '../../hooks/UserContext';
 import {
   Container,
   StatusContainer,
@@ -20,8 +20,8 @@ export const DeliveryStatus = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // 1. Pega o ID se o usuário acabou de vir do carrinho
-  const orderIdFromState = location.state?.orderId;
+  const orderIdFromState =
+    location.state?.orderId || localStorage.getItem('lastOrderId');
 
   const statusMap = [
     { label: 'Pedido Realizado', value: 'Pedido Realizado' },
@@ -31,7 +31,6 @@ export const DeliveryStatus = () => {
     { label: 'Pedido Entregue', value: 'Pedido Entregue' },
   ];
 
-  // 2. UNIFICADO: Busca o pedido específico OU o último do usuário logado
   const {
     data: order,
     isLoading,
@@ -48,7 +47,7 @@ export const DeliveryStatus = () => {
 
       return response.data;
     },
-    enabled: !!userInfo?.id && !!orderIdFromState, // 👈 só busca se tiver ID
+    enabled: !!userInfo?.id && !!orderIdFromState,
     refetchInterval: (query) => {
       const data = query.state.data;
       if (
@@ -117,7 +116,12 @@ export const DeliveryStatus = () => {
               <br />
               Sua confirmação é muito importante para nós. Volte sempre!
             </p>
-            <Button onClick={() => navigate('/cardapio')}>
+            <Button
+              onClick={() => {
+                localStorage.removeItem('lastOrderId');
+                navigate('/cardapio');
+              }}
+            >
               Pedir novamente
             </Button>
           </FeedbackContainer>
@@ -131,7 +135,12 @@ export const DeliveryStatus = () => {
               atendida. <br />
               Dúvidas? Entre em contato conosco pelo telefone ou Whatsapp.
             </p>
-            <Button onClick={() => navigate('/cardapio')}>
+            <Button
+              onClick={() => {
+                localStorage.removeItem('lastOrderId');
+                navigate('/cardapio');
+              }}
+            >
               Voltar ao cardápio
             </Button>
           </FeedbackContainer1>
