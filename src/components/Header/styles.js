@@ -109,6 +109,10 @@ export const TopRow = styled.div`
     align-items: center;
     justify-content: space-between;
     padding-bottom: 8px;
+
+    & > div {
+      display: flex !important;
+    }
   }
 `;
 
