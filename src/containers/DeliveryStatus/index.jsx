@@ -16,7 +16,7 @@ import {
 } from './styles';
 
 export const DeliveryStatus = () => {
-  const { userInfo } = useUser(); 
+  const { userInfo } = useUser();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -32,36 +32,34 @@ export const DeliveryStatus = () => {
   ];
 
   // 2. UNIFICADO: Busca o pedido específico OU o último do usuário logado
-  const { data: order, isLoading, error } = useQuery({
-  queryKey: ['orderStatus', orderIdFromState, userInfo?.id],
-  queryFn: async () => {
-    const token = userInfo?.token;
-    if (!token) throw new Error('Token não encontrado');
+  const {
+    data: order,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ['orderStatus', orderIdFromState],
+    queryFn: async () => {
+      const token = userInfo?.token;
+      if (!token) throw new Error('Token não encontrado');
 
-    // Se tiver ID do state (veio do checkout), busca o específico
-    // Se não, busca na rota geral (que agora já vem filtrada pelo Back-end)
-    const url = orderIdFromState ? `/orders/${orderIdFromState}` : `/orders`;
+      const response = await api.get(`/orders/${orderIdFromState}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-    const response = await api.get(url, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-
-    // Se a resposta for um array (veio do /orders), pegamos o primeiro (mais recente)
-    if (Array.isArray(response.data)) {
-      return response.data[0];
-    }
-
-    return response.data;
-  },
-  enabled: !!userInfo?.id,
-  refetchInterval: (query) => {
-    const data = query.state.data;
-    if (data?.status === 'Pedido Entregue' || data?.status === 'Pedido Cancelado') {
-      return false;
-    }
-    return 5000;
-  },
-});
+      return response.data;
+    },
+    enabled: !!userInfo?.id && !!orderIdFromState, // 👈 só busca se tiver ID
+    refetchInterval: (query) => {
+      const data = query.state.data;
+      if (
+        data?.status === 'Pedido Entregue' ||
+        data?.status === 'Pedido Cancelado'
+      ) {
+        return false;
+      }
+      return 5000;
+    },
+  });
 
   if (isLoading) {
     return (
@@ -71,13 +69,17 @@ export const DeliveryStatus = () => {
     );
   }
 
-  if (error || !order) {
+  if (!orderIdFromState || error || (!isLoading && !order)) {
     return (
       <Container>
-        <p style={{ marginTop: '100px', marginBottom: '50px',fontSize: '25px' }}>
-          Nenhum pedido encontrado para este perfil.
+        <p
+          style={{ marginTop: '100px', marginBottom: '50px', fontSize: '25px' }}
+        >
+          Nenhum pedido realizado.
         </p>
-        <Button onClick={() => navigate('/cardapio')}>Ir para o Cardápio</Button>
+        <Button onClick={() => navigate('/cardapio')}>
+          Ir para o Cardápio
+        </Button>
       </Container>
     );
   }
@@ -115,7 +117,9 @@ export const DeliveryStatus = () => {
               <br />
               Sua confirmação é muito importante para nós. Volte sempre!
             </p>
-            <Button onClick={() => navigate('/cardapio')}>Pedir novamente</Button>
+            <Button onClick={() => navigate('/cardapio')}>
+              Pedir novamente
+            </Button>
           </FeedbackContainer>
         )}
 
@@ -123,10 +127,13 @@ export const DeliveryStatus = () => {
           <FeedbackContainer1>
             <h3>❌ Pedido Cancelado</h3>
             <p>
-              Olá <strong>{userInfo?.name}</strong>, sua solicitação foi atendida. <br/>
-             Dúvidas? Entre em contato conosco pelo telefone ou Whatsapp.
+              Olá <strong>{userInfo?.name}</strong>, sua solicitação foi
+              atendida. <br />
+              Dúvidas? Entre em contato conosco pelo telefone ou Whatsapp.
             </p>
-            <Button onClick={() => navigate('/cardapio')}>Voltar ao cardápio</Button>
+            <Button onClick={() => navigate('/cardapio')}>
+              Voltar ao cardápio
+            </Button>
           </FeedbackContainer1>
         )}
       </Content>

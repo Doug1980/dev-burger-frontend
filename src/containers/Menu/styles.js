@@ -185,6 +185,6 @@ export const ProductsContainer = styled.div`
 `;
 export const GlobalStyle = createGlobalStyle`
   .swal2-popup {
-    border-radius: 24px !important;
+    border-radius: 12px !important;
   }
 `;
