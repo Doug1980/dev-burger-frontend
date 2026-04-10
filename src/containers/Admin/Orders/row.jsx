@@ -77,7 +77,9 @@ export function Row({ row, setOrders, orders }) {
 
         <TableCell>
           <SelectStatus
-            options={orderStatusOptions.filter((status) => status.id !== 0)}
+            options={orderStatusOptions.filter(
+              (status) => status.id !== 0 && status.id !== 7,
+            )}
             placeholder={isNewOrder ? '⚡ Novo pedido!' : 'Status'}
             defaultValue={orderStatusOptions.find(
               (status) => status.value === row.status || null,
