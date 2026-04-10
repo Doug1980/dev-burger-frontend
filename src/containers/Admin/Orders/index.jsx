@@ -67,9 +67,16 @@ export function Orders() {
         (item) => item.id === activeStatus,
       );
       if (statusOption) {
-        newFilteredOrders = orders.filter(
-          (order) => order.status === statusOption.value,
-        );
+        if (statusOption.id === 7) {
+          // Novo Pedido = status vazio
+          newFilteredOrders = orders.filter(
+            (o) => !o.status || o.status === '',
+          );
+        } else {
+          newFilteredOrders = orders.filter(
+            (order) => order.status === statusOption.value,
+          );
+        }
       }
     }
 
@@ -87,7 +94,9 @@ export function Orders() {
     return orders.filter((o) => o.status === statusValue || !o.status).length;
   };
 
-  const newOrdersCount = countNewOrders('Pedido Realizado');
+  const newOrdersCount = orders.filter(
+    (o) => !o.status || o.status === '',
+  ).length;
 
   return (
     <>
@@ -99,7 +108,7 @@ export function Orders() {
             $isActiveStatus={activeStatus === status.id}
           >
             {status.label}
-            {status.value === 'Pedido Realizado' && newOrdersCount > 0 && (
+            {status.id === 7 && newOrdersCount > 0 && (
               <span
                 style={{
                   marginLeft: 6,
