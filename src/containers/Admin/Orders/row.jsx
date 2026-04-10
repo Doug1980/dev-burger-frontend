@@ -11,17 +11,69 @@ import Typography from '@mui/material/Typography';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { useState } from 'react';
+import {
+  FaClipboardList,
+  FaFire,
+  FaCheckCircle,
+  FaMotorcycle,
+  FaBoxOpen,
+  FaTimesCircle,
+} from 'react-icons/fa';
 import { formatDate } from '../../../utils/formatDate';
 import { ProductImage } from '../../../components/CartItems/styles';
 import { SelectStatus } from './styles';
 import { orderStatusOptions } from './orderStatus';
 import { api } from '../../../services/api';
 
+const statusConfig = {
+  'Pedido realizado': {
+    label: 'Pedido Realizado',
+    icon: <FaClipboardList />,
+    bg: '#e3f2fd',
+    color: '#0d47a1',
+  },
+  'Pedido Realizado': {
+    label: 'Pedido Realizado',
+    icon: <FaClipboardList />,
+    bg: '#e3f2fd',
+    color: '#0d47a1',
+  },
+  'Em Preparação': {
+    label: 'Em Preparação',
+    icon: <FaFire />,
+    bg: '#fff8e1',
+    color: '#e65100',
+  },
+  'Pedido Pronto': {
+    label: 'Pedido Pronto',
+    icon: <FaCheckCircle />,
+    bg: '#e8f5e9',
+    color: '#1b5e20',
+  },
+  'Pedido à Caminho': {
+    label: 'Pedido à Caminho',
+    icon: <FaMotorcycle />,
+    bg: '#ede7f6',
+    color: '#4527a0',
+  },
+  'Pedido Entregue': {
+    label: 'Pedido Entregue',
+    icon: <FaBoxOpen />,
+    bg: '#e8f5e9',
+    color: '#1b5e20',
+  },
+  'Pedido Cancelado': {
+    label: 'Pedido Cancelado',
+    icon: <FaTimesCircle />,
+    bg: '#ffebee',
+    color: '#b71c1c',
+  },
+};
+
 export function Row({ row, setOrders, orders }) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // Troca a linha do isNewOrder por:
   const isNewOrder =
     !row.status || row.status === '' || row.status === 'Pedido realizado';
 
@@ -40,6 +92,8 @@ export function Row({ row, setOrders, orders }) {
     }
   }
 
+  const config = statusConfig[row.status];
+
   return (
     <>
       <TableRow
@@ -56,11 +110,7 @@ export function Row({ row, setOrders, orders }) {
         }}
       >
         <TableCell>
-          <IconButton
-            aria-label="expand row"
-            size="small"
-            onClick={() => setOpen(!open)}
-          >
+          <IconButton size="small" onClick={() => setOpen(!open)}>
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
@@ -76,25 +126,70 @@ export function Row({ row, setOrders, orders }) {
         <TableCell>{formatDate(row.date)}</TableCell>
 
         <TableCell>
-          <SelectStatus
-            options={orderStatusOptions.filter(
-              (status) => status.id !== 0 && status.id !== 7,
-            )}
-            placeholder={isNewOrder ? '⚡ Novo pedido!' : 'Status'}
-            defaultValue={orderStatusOptions.find(
-              (status) => status.value === row.status || null,
-            )}
-            onChange={(status) => newStatusOrder(row.orderId, status.value)}
-            isLoading={loading}
-            menuPortalTarget={document.body}
-            styles={{
-              placeholder: (base) => ({
-                ...base,
-                color: isNewOrder ? '#ff4400' : base.color,
-                fontWeight: isNewOrder ? 700 : base.fontWeight,
-              }),
-            }}
-          />
+          {isNewOrder ? (
+            <SelectStatus
+              options={orderStatusOptions.filter(
+                (s) => s.id !== 0 && s.id !== 7,
+              )}
+              placeholder="⚡ Novo pedido!"
+              onChange={(status) => newStatusOrder(row.orderId, status.value)}
+              isLoading={loading}
+              menuPortalTarget={document.body}
+              styles={{
+                placeholder: (base) => ({
+                  ...base,
+                  color: '#ff4400',
+                  fontWeight: 700,
+                }),
+                control: (base) => ({
+                  ...base,
+                  borderColor: '#ff8c00',
+                  backgroundColor: '#fff5e6',
+                }),
+              }}
+            />
+          ) : (
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
+                flexWrap: 'wrap',
+              }}
+            >
+              {config && (
+                <span
+                  style={{
+                    background: config.bg,
+                    color: config.color,
+                    fontSize: 12,
+                    fontWeight: 700,
+                    padding: '5px 12px',
+                    borderRadius: 6,
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 6,
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {config.icon}
+                  {config.label}
+                </span>
+              )}
+              <SelectStatus
+                options={orderStatusOptions.filter(
+                  (s) => s.id !== 0 && s.id !== 7,
+                )}
+                placeholder="Alterar status"
+                defaultValue={orderStatusOptions.find(
+                  (s) => s.value === row.status,
+                )}
+                onChange={(status) => newStatusOrder(row.orderId, status.value)}
+                isLoading={loading}
+                menuPortalTarget={document.body}
+              />
+            </div>
+          )}
         </TableCell>
       </TableRow>
 
