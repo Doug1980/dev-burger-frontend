@@ -21,15 +21,15 @@ export function Row({ row, setOrders, orders }) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const isNewOrder = row.status === 'Pedido Realizado' || !row.status;
+
   async function newStatusOrder(id, status) {
     try {
       setLoading(true);
       await api.put(`orders/${id}`, { status });
-
       const newOrders = orders.map((order) =>
         order._id === id ? { ...order, status } : order,
       );
-
       setOrders(newOrders);
     } catch (err) {
       console.error(err);
@@ -40,7 +40,19 @@ export function Row({ row, setOrders, orders }) {
 
   return (
     <>
-      <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+      <TableRow
+        sx={{
+          '& > *': { borderBottom: 'unset' },
+          ...(isNewOrder
+            ? {
+                animation: 'pulseRow 2s infinite',
+                borderLeft: '4px solid #ff8c00',
+              }
+            : {
+                borderLeft: '4px solid transparent',
+              }),
+        }}
+      >
         <TableCell>
           <IconButton
             aria-label="expand row"
@@ -50,25 +62,38 @@ export function Row({ row, setOrders, orders }) {
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
+
         <TableCell component="th" scope="row">
-          {row.orderId}
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            {isNewOrder && <span className="new-order-dot" />}
+            {row.orderId}
+          </div>
         </TableCell>
+
         <TableCell>{row.name}</TableCell>
         <TableCell>{formatDate(row.date)}</TableCell>
 
         <TableCell>
           <SelectStatus
             options={orderStatusOptions.filter((status) => status.id !== 0)}
-            placeholder="Status"
+            placeholder={isNewOrder ? '⚡ Novo pedido!' : 'Status'}
             defaultValue={orderStatusOptions.find(
               (status) => status.value === row.status || null,
             )}
             onChange={(status) => newStatusOrder(row.orderId, status.value)}
             isLoading={loading}
             menuPortalTarget={document.body}
+            styles={{
+              placeholder: (base) => ({
+                ...base,
+                color: isNewOrder ? '#ff4400' : base.color,
+                fontWeight: isNewOrder ? 700 : base.fontWeight,
+              }),
+            }}
           />
         </TableCell>
       </TableRow>
+
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
@@ -89,8 +114,7 @@ export function Row({ row, setOrders, orders }) {
                   {row.products.map((product) => (
                     <TableRow key={product.id}>
                       <TableCell component="th" scope="row">
-                        {product.quantity}{' '}
-                        {/* ✅ AGORA VAI MOSTRAR 1, 2, 3... */}
+                        {product.quantity}
                       </TableCell>
                       <TableCell>{product.name}</TableCell>
                       <TableCell>{product.category}</TableCell>

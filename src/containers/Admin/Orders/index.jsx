@@ -5,9 +5,8 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import { useEffect, useState, useCallback } from 'react'; // Adicionado useCallback
+import { useEffect, useState, useCallback } from 'react';
 import { orderStatusOptions } from './orderStatus';
-
 import { api } from '../../../services/api';
 import { Row } from './row';
 import { FilterOption, Filter } from './styles';
@@ -18,7 +17,22 @@ export function Orders() {
   const [activeStatus, setActiveStatus] = useState(0);
   const [rows, setRows] = useState([]);
 
-  // 1. Carrega os pedidos
+  // Injeta animações CSS
+  useEffect(() => {
+    const style = document.createElement('style');
+    style.innerHTML = `
+      @keyframes pulseRow { 0%,100%{background:#fff5e6} 50%{background:#ffe8c0} }
+      @keyframes pulseDot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.3;transform:scale(1.8)} }
+      .new-order-dot {
+        display:inline-block; width:10px; height:10px; border-radius:50%;
+        background:#ff4400; animation:pulseDot 1s infinite; margin-right:8px; flex-shrink:0;
+      }
+    `;
+    document.head.appendChild(style);
+    return () => document.head.removeChild(style);
+  }, []);
+
+  // Carrega pedidos + auto-refresh a cada 15s
   useEffect(() => {
     async function loadOrders() {
       try {
@@ -26,13 +40,15 @@ export function Orders() {
         setOrders(data);
         setFilteredOrders(data);
       } catch (err) {
-        console.error("Erro ao carregar pedidos:", err);
+        console.error('Erro ao carregar pedidos:', err);
       }
     }
+
     loadOrders();
+    const interval = setInterval(loadOrders, 15000);
+    return () => clearInterval(interval);
   }, []);
 
-  // 2. Função de formatação (Memorizada para evitar renders extras)
   const createData = useCallback((order) => {
     return {
       name: order.user.name,
@@ -43,31 +59,35 @@ export function Orders() {
     };
   }, []);
 
-  // 3. Lógica de Filtragem e Formatação unificada
-  // Isso evita o erro de "changed size between renders"
   useEffect(() => {
     let newFilteredOrders = [...orders];
 
     if (activeStatus !== 0) {
-      const statusOption = orderStatusOptions.find(item => item.id === activeStatus);
+      const statusOption = orderStatusOptions.find(
+        (item) => item.id === activeStatus,
+      );
       if (statusOption) {
         newFilteredOrders = orders.filter(
-          (order) => order.status === statusOption.value
+          (order) => order.status === statusOption.value,
         );
       }
     }
 
     setFilteredOrders(newFilteredOrders);
-    
-    // Já aproveitamos para gerar as linhas da tabela aqui mesmo
     const newRows = newFilteredOrders.map((order) => createData(order));
     setRows(newRows);
-
   }, [orders, activeStatus, createData]);
 
   function handleStatus(status) {
     setActiveStatus(status.id);
   }
+
+  // Conta novos pedidos por status
+  const countNewOrders = (statusValue) => {
+    return orders.filter((o) => o.status === statusValue || !o.status).length;
+  };
+
+  const newOrdersCount = countNewOrders('Pedido Realizado');
 
   return (
     <>
@@ -79,6 +99,22 @@ export function Orders() {
             $isActiveStatus={activeStatus === status.id}
           >
             {status.label}
+            {status.value === 'Pedido Realizado' && newOrdersCount > 0 && (
+              <span
+                style={{
+                  marginLeft: 6,
+                  background: '#ff4400',
+                  color: 'white',
+                  fontSize: 10,
+                  fontWeight: 700,
+                  padding: '1px 6px',
+                  borderRadius: 20,
+                  verticalAlign: 'middle',
+                }}
+              >
+                {newOrdersCount}
+              </span>
+            )}
           </FilterOption>
         ))}
       </Filter>
