@@ -22,7 +22,8 @@ export function Row({ row, setOrders, orders }) {
   const [loading, setLoading] = useState(false);
 
   // Troca a linha do isNewOrder por:
-  const isNewOrder = !row.status || row.status === '';
+  const isNewOrder =
+    !row.status || row.status === '' || row.status === 'Pedido realizado';
 
   async function newStatusOrder(id, status) {
     try {
