@@ -126,70 +126,57 @@ export function Row({ row, setOrders, orders }) {
         <TableCell>{formatDate(row.date)}</TableCell>
 
         <TableCell>
-          {isNewOrder ? (
-            <SelectStatus
-              options={orderStatusOptions.filter(
-                (s) => s.id !== 0 && s.id !== 7,
-              )}
-              placeholder="⚡ Novo pedido!"
-              onChange={(status) => newStatusOrder(row.orderId, status.value)}
-              isLoading={loading}
-              menuPortalTarget={document.body}
-              styles={{
-                placeholder: (base) => ({
-                  ...base,
-                  color: '#ff4400',
-                  fontWeight: 700,
-                }),
-                control: (base) => ({
-                  ...base,
-                  borderColor: '#ff8c00',
-                  backgroundColor: '#fff5e6',
-                }),
-              }}
-            />
-          ) : (
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 8,
-                flexWrap: 'wrap',
-              }}
-            >
-              {config && (
-                <span
-                  style={{
-                    background: config.bg,
-                    color: config.color,
-                    fontSize: 12,
-                    fontWeight: 700,
-                    padding: '5px 12px',
-                    borderRadius: 6,
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: 6,
-                    whiteSpace: 'nowrap',
-                  }}
-                >
-                  {config.icon}
-                  {config.label}
-                </span>
-              )}
-              <SelectStatus
-                options={orderStatusOptions.filter(
-                  (s) => s.id !== 0 && s.id !== 7,
-                )}
-                placeholder="Alterar status"
-                defaultValue={orderStatusOptions.find(
-                  (s) => s.value === row.status,
-                )}
-                onChange={(status) => newStatusOrder(row.orderId, status.value)}
-                isLoading={loading}
-                menuPortalTarget={document.body}
-              />
-            </div>
-          )}
+          <SelectStatus
+            options={orderStatusOptions.filter((s) => s.id !== 0 && s.id !== 7)}
+            placeholder={isNewOrder ? '⚡ Novo pedido!' : 'Alterar status'}
+            defaultValue={orderStatusOptions.find(
+              (s) => s.value === row.status,
+            )}
+            onChange={(status) => newStatusOrder(row.orderId, status.value)}
+            isLoading={loading}
+            menuPortalTarget={document.body}
+            formatOptionLabel={(option, { context }) => {
+              const cfg = statusConfig[option.value];
+              if (context === 'value' && cfg) {
+                return (
+                  <span
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: 6,
+                      color: cfg.color,
+                      fontWeight: 700,
+                      fontSize: 12,
+                    }}
+                  >
+                    {cfg.icon}
+                    {cfg.label}
+                  </span>
+                );
+              }
+              return option.label;
+            }}
+            styles={{
+              placeholder: (base) => ({
+                ...base,
+                color: isNewOrder ? '#ff4400' : base.color,
+                fontWeight: isNewOrder ? 700 : base.fontWeight,
+              }),
+              control: (base) => ({
+                ...base,
+                backgroundColor: isNewOrder
+                  ? '#fff5e6'
+                  : config
+                    ? config.bg
+                    : base.backgroundColor,
+                borderColor: isNewOrder
+                  ? '#ff8c00'
+                  : config
+                    ? config.color
+                    : base.borderColor,
+              }),
+            }}
+          />
         </TableCell>
       </TableRow>
 
