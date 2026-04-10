@@ -59,8 +59,8 @@ const statusConfig = {
   'Pedido Entregue': {
     label: 'Pedido Entregue',
     icon: <FaBoxOpen />,
-    bg: '#e8f5e9',
-    color: '#1b5e20',
+    bg: '#e0f7fa',
+    color: '#006064',
   },
   'Pedido Cancelado': {
     label: 'Pedido Cancelado',
