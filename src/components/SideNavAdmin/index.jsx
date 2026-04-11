@@ -1,6 +1,6 @@
 import { SignOut } from 'phosphor-react';
 
-import Logo from '../../assets/Logo.svg';
+import Logo from '../../assets/Devburguer-v2.png';
 import { navLinks } from './navLinks';
 import { Container, NavLink, NavLinkContainer, Footer } from './styles';
 import { useUser } from '../../hooks/UserContext';
