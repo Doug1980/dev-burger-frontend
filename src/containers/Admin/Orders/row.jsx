@@ -194,12 +194,14 @@ export function Row({ row, setOrders, orders }) {
             : { borderLeft: '4px solid transparent' }),
         }}
       >
+        {/* 👇 Botão expandir */}
         <TableCell>
           <IconButton size="small" onClick={() => setOpen(!open)}>
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
 
+        {/* 👇 ID do pedido */}
         <TableCell component="th" scope="row">
           <div style={{ display: 'flex', alignItems: 'center' }}>
             {isNewOrder && <span className="new-order-dot" />}
@@ -207,75 +209,87 @@ export function Row({ row, setOrders, orders }) {
           </div>
         </TableCell>
 
+        {/* 👇 Nome do cliente */}
         <TableCell>{row.name}</TableCell>
+
+        {/* 👇 Data */}
         <TableCell>{formatDate(row.date)}</TableCell>
 
+        {/* 👇 Select de status */}
         <TableCell>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 8,
-              flexWrap: 'wrap',
-            }}
-          >
-            {config && (
-              <span
-                style={{
-                  background: config.bg,
-                  color: config.color,
-                  fontSize: 12,
-                  fontWeight: 700,
-                  padding: '5px 10px',
-                  borderRadius: 6,
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: 6,
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                {config.icon}
-                {config.label}
-              </span>
-            )}
-
-            {row.status !== 'Pedido Entregue' &&
-              row.status !== 'Pedido Cancelado' && (
-                <SelectStatus
-                  options={availableOptions}
-                  placeholder={
-                    isNewOrder ? '⚡ Novo pedido!' : 'Próxima ação ▼'
-                  }
-                  value={null}
-                  onChange={handleStatusChange}
-                  isLoading={loading}
-                  menuPortalTarget={document.body}
-                  styles={{
-                    placeholder: (base) => ({
-                      ...base,
-                      color: isNewOrder ? '#ff4400' : '#555',
-                      fontWeight: isNewOrder ? 700 : 500,
-                      fontSize: 12,
-                    }),
-                    control: (base) => ({
-                      ...base,
-                      backgroundColor: isNewOrder ? '#fff5e6' : 'white',
-                      borderColor: isNewOrder ? '#ff8c00' : '#ddd',
-                      minWidth: 160,
-                    }),
+          <SelectStatus
+            options={availableOptions}
+            value={
+              orderStatusOptions.find((s) => {
+                if (row.status === 'Pedido realizado')
+                  return s.value === 'Pedido Realizado';
+                return s.value === row.status;
+              }) || null
+            }
+            onChange={handleStatusChange}
+            isLoading={loading}
+            isDisabled={
+              row.status === 'Pedido Entregue' ||
+              row.status === 'Pedido Cancelado'
+            }
+            menuPortalTarget={document.body}
+            formatOptionLabel={(option) => {
+              const cfg = statusConfig[option.value];
+              if (!cfg) return option.label;
+              return (
+                <span
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 6,
+                    color: cfg.color,
+                    fontWeight: 700,
+                    fontSize: 12,
                   }}
-                />
-              )}
-
-            {(row.status === 'Pedido Entregue' ||
-              row.status === 'Pedido Cancelado') && (
-              <span
-                style={{ fontSize: 11, color: '#aaa', fontStyle: 'italic' }}
-              >
-                {row.status === 'Pedido Entregue' ? 'Finalizado' : 'Cancelado'}
-              </span>
-            )}
-          </div>
+                >
+                  {cfg.icon}
+                  {cfg.label}
+                </span>
+              );
+            }}
+            styles={{
+              singleValue: (base) => ({
+                ...base,
+                color: config ? config.color : base.color,
+                fontWeight: 700,
+                fontSize: 12,
+              }),
+              control: (base) => ({
+                ...base,
+                backgroundColor: isNewOrder
+                  ? '#fff5e6'
+                  : config
+                    ? config.bg
+                    : base.backgroundColor,
+                borderColor: isNewOrder
+                  ? '#ff8c00'
+                  : config
+                    ? config.color
+                    : base.borderColor,
+                borderWidth: 1.5,
+                minWidth: 190,
+                cursor:
+                  row.status === 'Pedido Entregue' ||
+                  row.status === 'Pedido Cancelado'
+                    ? 'default'
+                    : 'pointer',
+              }),
+              dropdownIndicator: (base) => ({
+                ...base,
+                display:
+                  row.status === 'Pedido Entregue' ||
+                  row.status === 'Pedido Cancelado'
+                    ? 'none'
+                    : base.display,
+              }),
+              indicatorSeparator: () => ({ display: 'none' }),
+            }}
+          />
         </TableCell>
       </TableRow>
 
