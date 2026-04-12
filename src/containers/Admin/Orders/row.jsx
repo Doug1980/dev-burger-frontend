@@ -109,19 +109,68 @@ export function Row({ row, setOrders, orders }) {
   async function handleStatusChange(selectedStatus) {
     const selectedValue = selectedStatus.value;
 
-    // Cancelamento — sempre disponível com confirmação especial
     if (selectedValue === 'Pedido Cancelado') {
-      const result = await Swal.fire({
+      const { value: motivo } = await Swal.fire({
         title: 'Cancelar pedido?',
-        text: 'Esta ação é irreversível. Deseja cancelar o pedido do cliente?',
         icon: 'warning',
+        html: `
+          <p style="font-size:13px; color:#888; margin-bottom:16px;">Selecione o motivo do cancelamento:</p>
+          <div style="display:flex; flex-direction:column; gap:8px; text-align:left;">
+            <label style="display:flex; align-items:center; gap:10px; padding:10px 12px; border:1.5px solid #eee; border-radius:8px; cursor:pointer; font-size:13px;">
+              <input type="radio" name="motivo" value="Produto em falta" style="accent-color:#b71c1c;"> 📦 Produto em falta
+            </label>
+            <label style="display:flex; align-items:center; gap:10px; padding:10px 12px; border:1.5px solid #eee; border-radius:8px; cursor:pointer; font-size:13px;">
+              <input type="radio" name="motivo" value="Restaurante fechado" style="accent-color:#b71c1c;"> 🔒 Restaurante fechado
+            </label>
+            <label style="display:flex; align-items:center; gap:10px; padding:10px 12px; border:1.5px solid #eee; border-radius:8px; cursor:pointer; font-size:13px;">
+              <input type="radio" name="motivo" value="Problema técnico" style="accent-color:#b71c1c;"> ⚙️ Problema técnico
+            </label>
+            <label style="display:flex; align-items:center; gap:10px; padding:10px 12px; border:1.5px solid #eee; border-radius:8px; cursor:pointer; font-size:13px;">
+              <input type="radio" name="motivo" value="Outro" style="accent-color:#b71c1c;" id="radio-outro"> ✏️ Outro
+            </label>
+            <textarea id="motivo-outro" placeholder="Descreva o motivo..." rows="3"
+              style="display:none; width:100%; border:1.5px solid #ddd; border-radius:8px; padding:8px 10px; font-size:12px; resize:none; box-sizing:border-box; font-family:inherit; margin-top:4px;">
+            </textarea>
+          </div>
+        `,
         showCancelButton: true,
         confirmButtonText: 'Sim, cancelar',
         cancelButtonText: 'Voltar',
         confirmButtonColor: '#b71c1c',
         cancelButtonColor: '#888',
+        didOpen: () => {
+          const radioOutro = document.getElementById('radio-outro');
+          const textareaOutro = document.getElementById('motivo-outro');
+          document.querySelectorAll('input[name="motivo"]').forEach((radio) => {
+            radio.addEventListener('change', () => {
+              textareaOutro.style.display =
+                radio.value === 'Outro' ? 'block' : 'none';
+            });
+          });
+        },
+        preConfirm: () => {
+          const selected = document.querySelector(
+            'input[name="motivo"]:checked',
+          );
+          if (!selected) {
+            Swal.showValidationMessage(
+              'Selecione um motivo para o cancelamento!',
+            );
+            return false;
+          }
+          if (selected.value === 'Outro') {
+            const texto = document.getElementById('motivo-outro').value.trim();
+            if (!texto) {
+              Swal.showValidationMessage('Descreva o motivo do cancelamento!');
+              return false;
+            }
+            return texto;
+          }
+          return selected.value;
+        },
       });
-      if (result.isConfirmed) {
+
+      if (motivo) {
         await newStatusOrder(row.orderId, selectedValue);
       }
       return;
@@ -129,7 +178,6 @@ export function Row({ row, setOrders, orders }) {
 
     const selectedIndex = statusFlow.indexOf(selectedValue);
 
-    // Bloqueio de status anterior
     if (selectedIndex <= currentIndex) {
       Swal.fire({
         title: 'Ação não permitida!',
@@ -141,7 +189,6 @@ export function Row({ row, setOrders, orders }) {
       return;
     }
 
-    // Bloqueio de pulo de etapa
     if (selectedIndex > currentIndex + 1) {
       const nextStatus = statusFlow[currentIndex + 1];
       Swal.fire({
@@ -154,7 +201,6 @@ export function Row({ row, setOrders, orders }) {
       return;
     }
 
-    // Confirmação de avanço normal
     const result = await Swal.fire({
       title: 'Confirmar mudança?',
       text: `Deseja avançar para "${selectedValue}"?`,
