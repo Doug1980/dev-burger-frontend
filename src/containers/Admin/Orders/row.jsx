@@ -176,9 +176,7 @@ export function Row({ row, setOrders, orders }) {
   // Filtra opções disponíveis
   const availableOptions = orderStatusOptions.filter((s) => {
     if (s.id === 0 || s.id === 7) return false;
-    if (s.value === 'Pedido Cancelado') return true; // sempre disponível
-    const idx = statusFlow.indexOf(s.value);
-    return idx === currentIndex + 1; // só próximo
+    return true; // mostra todos
   });
 
   return (
@@ -226,7 +224,27 @@ export function Row({ row, setOrders, orders }) {
                 return s.value === row.status;
               }) || null
             }
-            onChange={handleStatusChange}
+            onChange={(selected) => {
+              const selectedIndex = statusFlow.indexOf(selected.value);
+              const isCurrent =
+                selected.value === row.status ||
+                (row.status === 'Pedido realizado' &&
+                  selected.value === 'Pedido Realizado');
+              const isPrevious = selectedIndex < currentIndex;
+              const isBlocked = selectedIndex > currentIndex + 1;
+
+              if (isCurrent || isPrevious) {
+                Swal.fire({
+                  title: 'Ação não permitida!',
+                  text: 'Não é possível voltar para um status anterior.',
+                  icon: 'error',
+                  confirmButtonText: 'Entendido',
+                  confirmButtonColor: '#FF8F00',
+                });
+                return;
+              }
+              handleStatusChange(selected);
+            }}
             isLoading={loading}
             isDisabled={
               row.status === 'Pedido Entregue' ||
@@ -236,23 +254,86 @@ export function Row({ row, setOrders, orders }) {
             formatOptionLabel={(option) => {
               const cfg = statusConfig[option.value];
               if (!cfg) return option.label;
+
+              const optionIndex = statusFlow.indexOf(option.value);
+              const isCurrent =
+                option.value === row.status ||
+                (row.status === 'Pedido realizado' &&
+                  option.value === 'Pedido Realizado');
+              const isPrevious = optionIndex < currentIndex;
+              const isNext = optionIndex === currentIndex + 1;
+              const isBlocked =
+                optionIndex > currentIndex + 1 &&
+                option.value !== 'Pedido Cancelado';
+              const isCancel = option.value === 'Pedido Cancelado';
+
+              let tag = null;
+              if (isCurrent)
+                tag = { label: 'atual', bg: '#ffe082', color: cfg.color };
+              else if (isPrevious)
+                tag = { label: 'anterior', bg: '#f0f0f0', color: '#888' };
+              else if (isNext)
+                tag = { label: 'próximo ▶', bg: '#a5d6a7', color: '#1b5e20' };
+              else if (isBlocked)
+                tag = { label: 'bloqueado 🔒', bg: '#f0f0f0', color: '#888' };
+              else if (isCancel)
+                tag = {
+                  label: 'sempre disponível',
+                  bg: '#ffcdd2',
+                  color: '#b71c1c',
+                };
+
               return (
-                <span
+                <div
                   style={{
-                    display: 'inline-flex',
+                    display: 'flex',
                     alignItems: 'center',
-                    gap: 6,
-                    color: cfg.color,
-                    fontWeight: 700,
-                    fontSize: 12,
+                    justifyContent: 'space-between',
+                    opacity: isPrevious || isBlocked ? 0.4 : 1,
+                    padding: '2px 0',
                   }}
                 >
-                  {cfg.icon}
-                  {cfg.label}
-                </span>
+                  <span
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: 6,
+                      color: cfg.color,
+                      fontWeight: 700,
+                      fontSize: 12,
+                    }}
+                  >
+                    {cfg.icon}
+                    {cfg.label}
+                  </span>
+                  {tag && (
+                    <span
+                      style={{
+                        fontSize: 9,
+                        padding: '2px 6px',
+                        borderRadius: 3,
+                        fontWeight: 700,
+                        background: tag.bg,
+                        color: tag.color,
+                        marginLeft: 8,
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      {tag.label}
+                    </span>
+                  )}
+                </div>
               );
             }}
             styles={{
+              option: (base, { data }) => {
+                const cfg = statusConfig[data.value];
+                return {
+                  ...base,
+                  background: cfg ? cfg.bg : base.background,
+                  padding: '8px 12px',
+                };
+              },
               singleValue: (base) => ({
                 ...base,
                 color: config ? config.color : base.color,
@@ -273,19 +354,6 @@ export function Row({ row, setOrders, orders }) {
                     : base.borderColor,
                 borderWidth: 1.5,
                 minWidth: 190,
-                cursor:
-                  row.status === 'Pedido Entregue' ||
-                  row.status === 'Pedido Cancelado'
-                    ? 'default'
-                    : 'pointer',
-              }),
-              dropdownIndicator: (base) => ({
-                ...base,
-                display:
-                  row.status === 'Pedido Entregue' ||
-                  row.status === 'Pedido Cancelado'
-                    ? 'none'
-                    : base.display,
               }),
               indicatorSeparator: () => ({ display: 'none' }),
             }}
