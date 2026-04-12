@@ -211,55 +211,71 @@ export function Row({ row, setOrders, orders }) {
         <TableCell>{formatDate(row.date)}</TableCell>
 
         <TableCell>
-          <SelectStatus
-            options={availableOptions}
-            placeholder={isNewOrder ? '⚡ Novo pedido!' : 'Alterar status'}
-            value={null}
-            onChange={handleStatusChange}
-            isLoading={loading}
-            menuPortalTarget={document.body}
-            formatOptionLabel={(option, { context }) => {
-              const cfg = statusConfig[option.value];
-              if (context === 'value' && cfg) {
-                return (
-                  <span
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: 6,
-                      color: cfg.color,
-                      fontWeight: 700,
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
+              flexWrap: 'wrap',
+            }}
+          >
+            {config && (
+              <span
+                style={{
+                  background: config.bg,
+                  color: config.color,
+                  fontSize: 12,
+                  fontWeight: 700,
+                  padding: '5px 10px',
+                  borderRadius: 6,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 6,
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {config.icon}
+                {config.label}
+              </span>
+            )}
+
+            {row.status !== 'Pedido Entregue' &&
+              row.status !== 'Pedido Cancelado' && (
+                <SelectStatus
+                  options={availableOptions}
+                  placeholder={
+                    isNewOrder ? '⚡ Novo pedido!' : 'Próxima ação ▼'
+                  }
+                  value={null}
+                  onChange={handleStatusChange}
+                  isLoading={loading}
+                  menuPortalTarget={document.body}
+                  styles={{
+                    placeholder: (base) => ({
+                      ...base,
+                      color: isNewOrder ? '#ff4400' : '#555',
+                      fontWeight: isNewOrder ? 700 : 500,
                       fontSize: 12,
-                    }}
-                  >
-                    {cfg.icon}
-                    {cfg.label}
-                  </span>
-                );
-              }
-              return option.label;
-            }}
-            styles={{
-              placeholder: (base) => ({
-                ...base,
-                color: isNewOrder ? '#ff4400' : base.color,
-                fontWeight: isNewOrder ? 700 : base.fontWeight,
-              }),
-              control: (base) => ({
-                ...base,
-                backgroundColor: isNewOrder
-                  ? '#fff5e6'
-                  : config
-                    ? config.bg
-                    : base.backgroundColor,
-                borderColor: isNewOrder
-                  ? '#ff8c00'
-                  : config
-                    ? config.color
-                    : base.borderColor,
-              }),
-            }}
-          />
+                    }),
+                    control: (base) => ({
+                      ...base,
+                      backgroundColor: isNewOrder ? '#fff5e6' : 'white',
+                      borderColor: isNewOrder ? '#ff8c00' : '#ddd',
+                      minWidth: 160,
+                    }),
+                  }}
+                />
+              )}
+
+            {(row.status === 'Pedido Entregue' ||
+              row.status === 'Pedido Cancelado') && (
+              <span
+                style={{ fontSize: 11, color: '#aaa', fontStyle: 'italic' }}
+              >
+                {row.status === 'Pedido Entregue' ? 'Finalizado' : 'Cancelado'}
+              </span>
+            )}
+          </div>
         </TableCell>
       </TableRow>
 
