@@ -25,7 +25,7 @@ export function CartItems() {
       text: `Deseja remover "${productName}" do carrinho?`,
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Sim, remover',
+      confirmButtonText: 'Remover',
       cancelButtonText: 'Cancelar',
       confirmButtonColor: '#FF8F00',
       cancelButtonColor: '#888',

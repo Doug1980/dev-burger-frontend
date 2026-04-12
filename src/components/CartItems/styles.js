@@ -70,7 +70,7 @@ export const MobileCardInfo = styled.div`
   flex-direction: column;
   gap: 6px;
 
-  p { font-size: 14px; font-weight: 700; color: #ff8c05; margin: 0; }
+  p { font-size: 14px; font-weight: 700; color: #7066E0; margin: 0; }
   strong { font-size: 14px; color: #363636; }
 `;
 
