@@ -21,31 +21,9 @@ const globalStyles = createGlobalStyle`
 
   @media (max-width: 768px) {
     .swal2-popup {
-      width: 80% !important;
-      padding: 20px !important;
-    }
-
-    .swal2-title {
-      font-size: 18px !important;
-    }
-
-    .swal2-html-container {
-      font-size: 13px !important;
-    }
-
-    .swal2-icon {
-      width: 60px !important;
-      height: 60px !important;
-      margin: 16px auto !important;
-    }
-
-    .swal2-icon .swal2-icon-content {
-      font-size: 30px !important;
-    }
-
-    .swal2-confirm {
-      font-size: 13px !important;
-      padding: 8px 20px !important;
+      width: 75% !important;
+      padding: 24px 20px !important;
+      font-size: 14px !important;
     }
   }
 `;
