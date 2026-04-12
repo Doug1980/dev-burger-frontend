@@ -19,6 +19,7 @@ import {
   FaBoxOpen,
   FaTimesCircle,
 } from 'react-icons/fa';
+import Swal from 'sweetalert2';
 import { formatDate } from '../../../utils/formatDate';
 import { ProductImage } from '../../../components/CartItems/styles';
 import { SelectStatus } from './styles';
@@ -70,12 +71,25 @@ const statusConfig = {
   },
 };
 
+// Ordem dos status — define o fluxo
+const statusFlow = [
+  'Pedido Realizado',
+  'Em Preparação',
+  'Pedido Pronto',
+  'Pedido à Caminho',
+  'Pedido Entregue',
+];
+
 export function Row({ row, setOrders, orders }) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const isNewOrder =
     !row.status || row.status === '' || row.status === 'Pedido realizado';
+
+  const currentIndex = statusFlow.indexOf(
+    row.status === 'Pedido realizado' ? 'Pedido Realizado' : row.status,
+  );
 
   async function newStatusOrder(id, status) {
     try {
@@ -92,7 +106,80 @@ export function Row({ row, setOrders, orders }) {
     }
   }
 
+  async function handleStatusChange(selectedStatus) {
+    const selectedValue = selectedStatus.value;
+
+    // Cancelamento — sempre disponível com confirmação especial
+    if (selectedValue === 'Pedido Cancelado') {
+      const result = await Swal.fire({
+        title: 'Cancelar pedido?',
+        text: 'Esta ação é irreversível. Deseja cancelar o pedido do cliente?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sim, cancelar',
+        cancelButtonText: 'Voltar',
+        confirmButtonColor: '#b71c1c',
+        cancelButtonColor: '#888',
+      });
+      if (result.isConfirmed) {
+        await newStatusOrder(row.orderId, selectedValue);
+      }
+      return;
+    }
+
+    const selectedIndex = statusFlow.indexOf(selectedValue);
+
+    // Bloqueio de status anterior
+    if (selectedIndex <= currentIndex) {
+      Swal.fire({
+        title: 'Ação não permitida!',
+        text: 'Não é possível voltar para um status anterior.',
+        icon: 'error',
+        confirmButtonText: 'Entendido',
+        confirmButtonColor: '#FF8F00',
+      });
+      return;
+    }
+
+    // Bloqueio de pulo de etapa
+    if (selectedIndex > currentIndex + 1) {
+      const nextStatus = statusFlow[currentIndex + 1];
+      Swal.fire({
+        title: 'Ação não permitida!',
+        text: `Você precisa concluir "${nextStatus}" antes de avançar.`,
+        icon: 'warning',
+        confirmButtonText: 'Entendido',
+        confirmButtonColor: '#FF8F00',
+      });
+      return;
+    }
+
+    // Confirmação de avanço normal
+    const result = await Swal.fire({
+      title: 'Confirmar mudança?',
+      text: `Deseja avançar para "${selectedValue}"?`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Sim, avançar',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#FF8F00',
+      cancelButtonColor: '#888',
+    });
+
+    if (result.isConfirmed) {
+      await newStatusOrder(row.orderId, selectedValue);
+    }
+  }
+
   const config = statusConfig[row.status];
+
+  // Filtra opções disponíveis
+  const availableOptions = orderStatusOptions.filter((s) => {
+    if (s.id === 0 || s.id === 7) return false;
+    if (s.value === 'Pedido Cancelado') return true; // sempre disponível
+    const idx = statusFlow.indexOf(s.value);
+    return idx === currentIndex + 1; // só próximo
+  });
 
   return (
     <>
@@ -104,9 +191,7 @@ export function Row({ row, setOrders, orders }) {
                 animation: 'pulseRow 2s infinite',
                 borderLeft: '4px solid #ff8c00',
               }
-            : {
-                borderLeft: '4px solid transparent',
-              }),
+            : { borderLeft: '4px solid transparent' }),
         }}
       >
         <TableCell>
@@ -127,12 +212,10 @@ export function Row({ row, setOrders, orders }) {
 
         <TableCell>
           <SelectStatus
-            options={orderStatusOptions.filter((s) => s.id !== 0 && s.id !== 7)}
+            options={availableOptions}
             placeholder={isNewOrder ? '⚡ Novo pedido!' : 'Alterar status'}
-            defaultValue={orderStatusOptions.find(
-              (s) => s.value === row.status,
-            )}
-            onChange={(status) => newStatusOrder(row.orderId, status.value)}
+            value={null}
+            onChange={handleStatusChange}
             isLoading={loading}
             menuPortalTarget={document.body}
             formatOptionLabel={(option, { context }) => {
