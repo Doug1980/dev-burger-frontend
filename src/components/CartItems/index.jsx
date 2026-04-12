@@ -1,3 +1,4 @@
+import Swal from 'sweetalert2';
 import TrashIcon from '../../assets/trash.svg';
 import { useCart } from '../../hooks/CartContext';
 import { formatPrice } from '../../utils/formatPrice';
@@ -18,13 +19,29 @@ export function CartItems() {
   const { cartProducts, increaseProduct, decreaseProduct, deleteProduct } =
     useCart();
 
+  const handleDeleteProduct = (productId, productName) => {
+    Swal.fire({
+      title: 'Remover produto?',
+      text: `Deseja remover "${productName}" do carrinho?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sim, remover',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#FF8F00',
+      cancelButtonColor: '#888',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteProduct(productId);
+      }
+    });
+  };
+
   if (!cartProducts?.length) {
     return <EmptyCart>Carrinho Vazio</EmptyCart>;
   }
 
   return (
     <>
-      {/* Desktop — tabela normal */}
       <DesktopTable>
         <Table.Root>
           <Table.Header>
@@ -65,7 +82,9 @@ export function CartItems() {
                   <TrashImage
                     src={TrashIcon}
                     alt="lixeira"
-                    onClick={() => deleteProduct(product.id)}
+                    onClick={() =>
+                      handleDeleteProduct(product.id, product.name)
+                    }
                   />
                 </Table.Td>
               </Table.Tr>
@@ -74,7 +93,6 @@ export function CartItems() {
         </Table.Root>
       </DesktopTable>
 
-      {/* Mobile — cards */}
       {cartProducts.map((product) => (
         <MobileCard key={product.id}>
           <ProductImage src={product.url} />
@@ -94,7 +112,7 @@ export function CartItems() {
             <TrashImage
               src={TrashIcon}
               alt="lixeira"
-              onClick={() => deleteProduct(product.id)}
+              onClick={() => handleDeleteProduct(product.id, product.name)}
             />
           </MobileCardActions>
         </MobileCard>
