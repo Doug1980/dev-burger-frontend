@@ -271,14 +271,18 @@ export function Row({ row, setOrders, orders }) {
               }) || null
             }
             onChange={(selected) => {
+              // 👈 Se for cancelamento, passa direto para o handleStatusChange
+              if (selected.value === 'Pedido Cancelado') {
+                handleStatusChange(selected);
+                return;
+              }
+
               const selectedIndex = statusFlow.indexOf(selected.value);
               const isCurrent =
                 selected.value === row.status ||
                 (row.status === 'Pedido realizado' &&
                   selected.value === 'Pedido Realizado');
-
               const isPrevious = selectedIndex < currentIndex;
-              const isBlocked = selectedIndex > currentIndex + 1;
 
               if (isCurrent || isPrevious) {
                 Swal.fire({
