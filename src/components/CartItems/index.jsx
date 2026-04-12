@@ -27,7 +27,7 @@ export function CartItems() {
       showCancelButton: true,
       confirmButtonText: 'Remover',
       cancelButtonText: 'Cancelar',
-      confirmButtonColor: '#FF8F00',
+      confirmButtonColor: '#7066E0',
       cancelButtonColor: '#888',
     }).then((result) => {
       if (result.isConfirmed) {
