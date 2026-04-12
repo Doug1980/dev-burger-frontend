@@ -70,7 +70,7 @@ const BaseFeedback = styled.div`
     display: block; /* Garante que o texto flua naturalmente */
     
     strong, span {
-      color: #9758a6;
+      color: #FF8F00;
       font-weight: bold;
     }
   }
@@ -90,7 +90,7 @@ export const Button = styled.button`
   width: 100%;
   max-width: 300px;
   height: 52px;
-  background: #9758a6;
+  background: #FF8F00;
   border-radius: 8px;
   border: none;
   font-weight: 600;
@@ -150,7 +150,7 @@ export const StatusContainer = styled.div`
 export const Line = styled.div`
   height: 4px;
   flex: 1;
-  background: ${(props) => (props.active ? '#9758a6' : '#bebebe')};
+  background: ${(props) => (props.active ? '#FF8F00' : '#bebebe')};
   margin-bottom: 30px; 
   margin-left: -40px;
   margin-right: -40px;
@@ -178,7 +178,7 @@ export const Step = styled.div`
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    background: ${(props) => (props.active ? '#9758a6' : '#bebebe')};
+    background: ${(props) => (props.active ? '#FF8F00' : '#bebebe')};
     color: white;
     display: flex;
     font-size: 25px;
@@ -191,7 +191,7 @@ export const Step = styled.div`
     margin-top: 10px;
     font-size: 14px;
     text-align: center;
-    color: ${(props) => (props.active ? '#9758a6' : '#666')};
+    color: ${(props) => (props.active ? '#FF8F00' : '#666')};
     font-weight: bold;
   }
 

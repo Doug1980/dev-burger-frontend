@@ -83,7 +83,7 @@ export const BackButton = styled.button`
   position: absolute;
   left: 40px;
 
-  background-color: #9758a6;
+  background-color: #FF8F00;
   color: #fff;
   border: none;
 
@@ -102,7 +102,7 @@ export const BackButton = styled.button`
   transition: all 0.25s ease;
 
   &:hover {
-    background-color: #5c2669;
+    background-color: #E65100;
     color: #fff;
   }
 

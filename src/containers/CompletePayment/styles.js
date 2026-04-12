@@ -59,7 +59,7 @@ export const Button = styled(Link)`
   margin-top: 20px;
   padding: 14px;
   border-radius: 10px;
-  background-color: #9758a6;
+  background-color: #FF8F00;
   color: #fff;
   font-size: 16px;
   font-weight: 500;
@@ -69,7 +69,7 @@ export const Button = styled(Link)`
   transition: background-color 0.3s ease, transform 0.2s ease;
 
   &:hover {
-    background-color: #6f357c;
+    background-color: #F57C00;
     transform: scale(1.03);
   }
 `;

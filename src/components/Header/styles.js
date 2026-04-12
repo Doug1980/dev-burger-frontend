@@ -50,13 +50,13 @@ export const Navigation = styled.nav`
 export const HeaderLink = styled(Link)`
   color: ${(props) => (props.$isActive ? props.theme.purple : props.theme.white)};
   text-decoration: ${(props) => (props.$isActive ? 'underline' : 'none')};
-  text-decoration-color: #9758a6;
+  text-decoration-color: #FF8F00;
   text-underline-offset: 6px;
   text-decoration-thickness: 3px;
   font-size: 30px;
   transition: color 200ms;
 
-  &:hover { color: #9758a6; }
+  &:hover { color: #FF8F00; }
 
   @media (max-width: 768px) {
     font-size: 18px;
@@ -86,7 +86,7 @@ export const Profile = styled.div`
     line-height: 1.2;
     span {
       font-weight: 700;
-      color: #9758a6;
+      color: #FF8F00;
     }
   }
 
@@ -134,7 +134,7 @@ export const LinkContainer = styled(Link)`
   color: #fff;
   text-decoration: none;
   cursor: pointer;
-  border-bottom: ${(props) => (props.$isActive ? '3px solid #9758a6' : 'none')};
+  border-bottom: ${(props) => (props.$isActive ? '3px solid #FF8F00' : 'none')};
   padding-bottom: 3px;
   width: fit-content;
 

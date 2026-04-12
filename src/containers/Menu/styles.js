@@ -39,7 +39,7 @@ export const Button = styled.button`
   position: absolute;
   left: 40px;
 
-  background-color: #9758a6;
+  background-color: #FF8F00;
   color: #fff;
   border: none;
 
@@ -58,7 +58,7 @@ export const Button = styled.button`
   transition: all 0.25s ease;
 
   &:hover {
-    background-color: #5c2669;
+    background-color: #E65100;
     color: #fff;
   }
 
@@ -148,13 +148,13 @@ export const CategoryMenu = styled.div`
 export const CategoryButton = styled(Link)`
   text-decoration: none;
   background: none;
-  color: ${(props) => (props.$isActiveCategory ? '#9758a6' : '#696969')};
+  color: ${(props) => (props.$isActiveCategory ? '#FF8F00' : '#696969')};
   font-size: 30px;
   font-weight: 500;
   padding-bottom: 5px;
   line-height: 30px;
   border: none;
-  border-bottom: ${(props) => props.$isActiveCategory && '3px solid #9758a6'};
+  border-bottom: ${(props) => props.$isActiveCategory && '3px solid #FF8F00'};
 
   @media (max-width: 768px) {
     font-size: 20px;
