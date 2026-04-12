@@ -22,7 +22,7 @@ const globalStyles = createGlobalStyle`
   @media (max-width: 768px) {
     .swal2-popup {
       width: 80% !important;
-      padding: 16px !important;
+      padding: 20px !important;
     }
 
     .swal2-title {
@@ -34,9 +34,13 @@ const globalStyles = createGlobalStyle`
     }
 
     .swal2-icon {
-      width: 50px !important;
-      height: 50px !important;
-      margin: 12px auto !important;
+      width: 60px !important;
+      height: 60px !important;
+      margin: 16px auto !important;
+    }
+
+    .swal2-icon .swal2-icon-content {
+      font-size: 30px !important;
     }
 
     .swal2-confirm {
