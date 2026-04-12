@@ -182,9 +182,3 @@ export const ProductsContainer = styled.div`
     margin-top: 60px; /* 👈 espaço extra no topo */
   }
 `;
-
-export const GlobalStyle = createGlobalStyle`
-  .swal2-popup {
-    border-radius: 12px !important;
-  }
-`;
