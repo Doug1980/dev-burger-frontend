@@ -276,6 +276,7 @@ export function Row({ row, setOrders, orders }) {
                 selected.value === row.status ||
                 (row.status === 'Pedido realizado' &&
                   selected.value === 'Pedido Realizado');
+
               const isPrevious = selectedIndex < currentIndex;
               const isBlocked = selectedIndex > currentIndex + 1;
 
@@ -316,18 +317,18 @@ export function Row({ row, setOrders, orders }) {
               let tag = null;
               if (isCurrent)
                 tag = { label: 'atual', bg: '#ffe082', color: cfg.color };
-              else if (isPrevious)
-                tag = { label: 'anterior', bg: '#f0f0f0', color: '#888' };
-              else if (isNext)
-                tag = { label: 'próximo ▶', bg: '#a5d6a7', color: '#1b5e20' };
-              else if (isBlocked)
-                tag = { label: 'bloqueado 🔒', bg: '#f0f0f0', color: '#888' };
               else if (isCancel)
                 tag = {
                   label: 'sempre disponível',
                   bg: '#ffcdd2',
                   color: '#b71c1c',
                 };
+              else if (isPrevious)
+                tag = { label: 'anterior', bg: '#f0f0f0', color: '#888' };
+              else if (isNext)
+                tag = { label: 'próximo ▶', bg: '#a5d6a7', color: '#1b5e20' };
+              else if (isBlocked)
+                tag = { label: 'bloqueado 🔒', bg: '#f0f0f0', color: '#888' };
 
               return (
                 <div
@@ -335,7 +336,7 @@ export function Row({ row, setOrders, orders }) {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    opacity: isPrevious || isBlocked ? 0.4 : 1,
+                    opacity: (isPrevious || isBlocked) && !isCancel ? 0.4 : 1,
                     padding: '2px 0',
                   }}
                 >
