@@ -6,7 +6,7 @@ export const Container = styled.div`
   justify-content: center;
   align-items: center;
   padding: 12px 16px;
-  background-color: #6a1b9a;
+  background-color: #FF8F00;
   color: #fff;
   box-sizing: border-box; 
   flex-shrink: 0; /* Garante que o footer não diminua de tamanho */

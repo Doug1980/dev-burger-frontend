@@ -2,47 +2,60 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 export const Container = styled.div`
-    .carousel-item {
-        padding-right: 40px;
-        margin-bottom: 30px;
-        
-    }
+  padding-left: 40px;
 
-    padding-left: 40px;
-    
+  .carousel-item {
+    padding-right: 40px;
+    margin-bottom: 30px;
+  }
 
-        .react-multiple-carousel__arrow--left {
+  .react-multiple-carousel__arrow--left {
     left: 15px;
     top: 10px;
-}
+  }
+
+  .react-multiple-carousel__arrow--right {
+    right: 48px;
+    top: 10px;
+  }
+
+  @media (max-width: 768px) {
+    padding-left: 16px;
+
+    .carousel-item {
+      padding-right: 16px;
+    }
 
     .react-multiple-carousel__arrow--right {
-    right: 48px;
-    top:10px;
-}
+      right: 20px;
+    }
+  }
 `;
 
 export const Title = styled.h2`
-    font-size: 50px;
-    font-weight: 800;
-    color: #FF8F00;
-    padding-bottom: 12px;
-    position: relative;
-    text-align: center;
-    margin-bottom: 40px;
-    margin-top: 20px;
-    
+  font-size: 50px;
+  font-weight: 800;
+  color: #FF8F00;
+  padding-bottom: 12px;
+  position: relative;
+  text-align: center;
+  margin-bottom: 40px;
+  margin-top: 20px;
 
-    &::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        width: 56px;
-        height: 4px;
-        background-color: #FF8F00;
-        left: calc(50% - 28px);
-    }
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    width: 56px;
+    height: 4px;
+    background-color: #FF8F00;
+    left: calc(50% - 28px);
+  }
 
+  @media (max-width: 768px) {
+    font-size: 32px;
+    margin-bottom: 20px;
+  }
 `;
 
 export const ContainerItems = styled.div`
