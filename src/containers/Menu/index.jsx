@@ -15,7 +15,6 @@ import {
   CategoryButton,
   Button,
   TopMenu,
-  GlobalStyle,
 } from './styles';
 
 export function Menu() {
@@ -86,7 +85,6 @@ export function Menu() {
 
   return (
     <Container>
-      <GlobalStyle /> {/* <- aplica os estilos globais */}
       {/* resto do menu */}
       <Banner>
         <h1>
