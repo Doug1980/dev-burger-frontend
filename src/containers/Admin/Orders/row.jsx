@@ -202,7 +202,7 @@ export function Row({ row, setOrders, orders }) {
     }
 
     const result = await Swal.fire({
-      title: 'Confirmar mudança?',
+      title: 'Confirmar novo status?',
       text: `Deseja avançar para "${selectedValue}"?`,
       icon: 'question',
       showCancelButton: true,
@@ -221,8 +221,9 @@ export function Row({ row, setOrders, orders }) {
 
   // Filtra opções disponíveis
   const availableOptions = orderStatusOptions.filter((s) => {
-    if (s.id === 0 || s.id === 7) return false;
-    return true; // mostra todos
+    if (s.id === 0) return false; // remove "Todos" sempre
+    if (s.id === 7 && !isNewOrder) return false; // remove "Novo Pedido" se não for novo
+    return true;
   });
 
   return (

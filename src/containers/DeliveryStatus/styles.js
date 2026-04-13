@@ -237,15 +237,15 @@ export const CancelReason = styled.div`
 export const CancelLink = styled.button`
   background: none;
   border: none;
-  color: #bbb;
-  font-size: 12px;
+  color: #999;
+  font-size: 13px;
   text-decoration: underline;
   cursor: pointer;
   padding: 8px 0;
   margin-top: 10px;
 
   &:hover {
-    color: #999;
+    color: #666;
   }
 
   &:disabled {
