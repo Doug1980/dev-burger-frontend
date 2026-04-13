@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../../services/api';
 import { useUser } from '../../hooks/UserContext';
+import Swal from 'sweetalert2';
 import {
   Container,
   StatusContainer,
@@ -14,6 +15,7 @@ import {
   FeedbackContainer1,
   Button,
   CancelReason,
+  CancelLink,
 } from './styles';
 
 export const DeliveryStatus = () => {
@@ -87,6 +89,38 @@ export const DeliveryStatus = () => {
   const currentStepIndex = statusMap.findIndex((s) => s.value === order.status);
   const displayId = order._id || order.id;
 
+  async function handleClientCancel() {
+    const { isConfirmed } = await Swal.fire({
+      title: 'Cancelar pedido?',
+      text: 'Tem certeza que deseja cancelar seu pedido?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sim, cancelar',
+      cancelButtonText: 'Voltar',
+      confirmButtonColor: '#b71c1c',
+      cancelButtonColor: '#888',
+    });
+
+    if (!isConfirmed) return;
+
+    try {
+      await api.put(
+        `/orders/${orderIdFromState}`,
+        { status: 'Pedido Cancelado', cancelReason: 'Cancelado pelo cliente' },
+        { headers: { Authorization: `Bearer ${userInfo?.token}` } },
+      );
+      localStorage.removeItem('lastOrderId');
+      navigate('/cardapio');
+    } catch (err) {
+      Swal.fire({
+        title: 'Erro',
+        text: 'Não foi possível cancelar o pedido. Tente novamente.',
+        icon: 'error',
+        confirmButtonColor: '#FF8F00',
+      });
+    }
+  }
+
   return (
     <Container>
       <OrderInfo>
@@ -107,6 +141,19 @@ export const DeliveryStatus = () => {
           </React.Fragment>
         ))}
       </StatusContainer>
+
+      {order?.status !== 'Pedido Entregue' &&
+        order?.status !== 'Pedido Cancelado' && (
+          <CancelLink
+            onClick={handleClientCancel}
+            disabled={
+              order?.status !== 'Pedido Realizado' &&
+              order?.status !== 'Pedido realizado'
+            }
+          >
+            Cancelar pedido
+          </CancelLink>
+        )}
 
       <Content>
         {order?.status === 'Pedido Entregue' && (

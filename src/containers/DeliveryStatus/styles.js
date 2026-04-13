@@ -233,3 +233,24 @@ export const CancelReason = styled.div`
     color: #7f1d1d;
   }
 `;
+
+export const CancelLink = styled.button`
+  background: none;
+  border: none;
+  color: #bbb;
+  font-size: 12px;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 8px 0;
+  margin-top: 10px;
+
+  &:hover {
+    color: #999;
+  }
+
+  &:disabled {
+    color: transparent;
+    cursor: default;
+    pointer-events: none;
+  }
+`;
