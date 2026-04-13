@@ -13,6 +13,7 @@ import {
   FeedbackContainer,
   FeedbackContainer1,
   Button,
+  CancelReason,
 } from './styles';
 
 export const DeliveryStatus = () => {
@@ -131,10 +132,15 @@ export const DeliveryStatus = () => {
           <FeedbackContainer1>
             <h3>❌ Pedido Cancelado</h3>
             <p>
-              Olá <strong>{userInfo?.name}</strong>, sua solicitação foi
-              atendida. <br />
-              Dúvidas? Entre em contato conosco pelo telefone ou Whatsapp.
+              Olá <strong>{userInfo?.name}</strong>, seu pedido foi cancelado.
             </p>
+            {order?.cancelReason && (
+              <CancelReason>
+                <span className="cancel-reason-label">Motivo</span>
+                <span className="cancel-reason-text">{order.cancelReason}</span>
+              </CancelReason>
+            )}
+            <p>Dúvidas? Entre em contato conosco pelo telefone ou Whatsapp.</p>
             <Button
               onClick={() => {
                 localStorage.removeItem('lastOrderId');

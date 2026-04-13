@@ -91,12 +91,12 @@ export function Row({ row, setOrders, orders }) {
     row.status === 'Pedido realizado' ? 'Pedido Realizado' : row.status,
   );
 
-  async function newStatusOrder(id, status) {
+  async function newStatusOrder(id, status, cancelReason = null) {
     try {
       setLoading(true);
-      await api.put(`orders/${id}`, { status });
+      await api.put(`orders/${id}`, { status, cancelReason });
       const newOrders = orders.map((order) =>
-        order._id === id ? { ...order, status } : order,
+        order._id === id ? { ...order, status, cancelReason } : order,
       );
       setOrders(newOrders);
     } catch (err) {
@@ -171,7 +171,7 @@ export function Row({ row, setOrders, orders }) {
       });
 
       if (motivo) {
-        await newStatusOrder(row.orderId, selectedValue);
+        await newStatusOrder(row.orderId, selectedValue, motivo);
       }
       return;
     }

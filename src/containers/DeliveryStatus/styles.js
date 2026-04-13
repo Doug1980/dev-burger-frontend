@@ -195,6 +195,8 @@ export const Step = styled.div`
     font-weight: bold;
   }
 
+  
+
   @media (max-width: 768px) {
     flex-direction: row;
     width: 100%;
@@ -205,5 +207,29 @@ export const Step = styled.div`
       text-align: left;
       font-size: 15px;
     }
+  }
+`;
+
+export const CancelReason = styled.div`
+  background: #ffebee;
+  border-radius: 8px;
+  padding: 12px 16px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  .cancel-reason-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #b71c1c;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .cancel-reason-text {
+    font-size: 14px;
+    font-weight: 500;
+    color: #7f1d1d;
   }
 `;
