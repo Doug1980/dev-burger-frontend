@@ -217,7 +217,7 @@ export function Row({ row, setOrders, orders }) {
       text: `Deseja avançar para "${selectedValue}"?`,
       icon: 'question',
       showCancelButton: true,
-      confirmButtonText: 'Sim, avançar',
+      confirmButtonText: 'Avançar',
       cancelButtonText: 'Cancelar',
       confirmButtonColor: '#FF8F00',
       cancelButtonColor: '#888',

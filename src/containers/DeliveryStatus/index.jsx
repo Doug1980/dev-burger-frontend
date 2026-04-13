@@ -104,11 +104,10 @@ export const DeliveryStatus = () => {
     if (!isConfirmed) return;
 
     try {
-      await api.put(
-        `/orders/${orderIdFromState}`,
-        { status: 'Pedido Cancelado', cancelReason: 'Cancelado pelo cliente' },
-        { headers: { Authorization: `Bearer ${userInfo?.token}` } },
-      );
+      await api.put(`/orders/${orderIdFromState}`, {
+        status: 'Pedido Cancelado',
+        cancelReason: 'Cancelado pelo cliente',
+      });
       localStorage.removeItem('lastOrderId');
       navigate('/cardapio');
     } catch (err) {
