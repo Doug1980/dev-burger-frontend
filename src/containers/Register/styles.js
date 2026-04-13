@@ -13,9 +13,8 @@ export const Container = styled.div`
 export const Header = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  margin-bottom: 30px;
+  align-items: center;  
+  
 
   img {
     width: 160px;
@@ -94,7 +93,7 @@ export const Title = styled.h2`
 export const Form = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 5px;
   padding: 20px;
   width: 100%;
   max-width: 400px;
