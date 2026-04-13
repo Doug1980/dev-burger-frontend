@@ -2,24 +2,47 @@ import styled from 'styled-components';
 import { Link as ReactLink } from 'react-router-dom';
 
 import BackgroundLogin from '../../assets/bg_login.svg';
+import Background from '../../assets/background.svg';
 
 export const Container = styled.div`
-  width: 100%;
-  height: 100vh;
   display: flex;
+  height: 100vh;
+  width: 100vw;
+`;
+
+export const Header = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 30px;
+
+  img {
+    width: 160px;
+  }
+
+  @media (max-width: 768px) {
+    img {
+      width: 120px;
+    }
+  }
 `;
 
 export const LeftContainer = styled.div`
-  width: 50%;
-  background: url(${BackgroundLogin}) no-repeat center;
+  background: url('${BackgroundLogin}');
   background-size: cover;
+  background-position: center;
+
+  height: 100%;
+  width: 100%;
+  max-width: 50%;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
   img {
-    width: 260px;
+    width: 60%;
   }
 
   @media (max-width: 768px) {
@@ -28,78 +51,85 @@ export const LeftContainer = styled.div`
 `;
 
 export const RightContainer = styled.div`
-  width: 50%;
-  background: #1f1f1f;
-
   display: flex;
-  flex-direction: column;
+  align-items: center;
   justify-content: center;
-  padding: 40px 60px;
+  flex-direction: column;
+
+  height: 100%;
+  width: 100%;
+  max-width: 50%;
+
+  background: url('${Background}');
+  background-color: #1e1e1e;
+  background-size: 1200px;
+
+  p {
+    color: #fff;
+    font-size: 18px;
+    font-weight: 800;
+
+    a {
+      text-decoration: underline;
+    }
+  }
 
   @media (max-width: 768px) {
-    width: 100%;
-    padding: 24px;
-  }
-`;
-
-export const Header = styled.div`
-  margin-bottom: 32px;
-
-  img {
-    width: 180px;
-    margin-bottom: 16px;
+    max-width: 100%;
+    background-size: cover;
   }
 `;
 
 export const Title = styled.h2`
+  font-family: "Road Rage", sans-serif;
+  font-size: 40px;
   color: #fff;
-  font-size: 28px;
-  font-weight: 700;
 
   span {
-    color: #ffb800;
+    color: #FF8F00;
+    font-family: "Road Rage", sans-serif;
   }
 `;
 
 export const Form = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
+  padding: 20px;
+  width: 100%;
+  max-width: 400px;
 `;
 
 export const InputContainer = styled.div`
   display: flex;
   flex-direction: column;
-
-  label {
-    color: #fff;
-    margin-bottom: 6px;
-    font-size: 14px;
-  }
+  gap: 5px;
+  width: 100%;
 
   input {
-    height: 48px;
-    border-radius: 8px;
+    width: 100%;
     border: none;
-    padding: 0 12px;
-    font-size: 16px;
+    height: 52px;
+    border-radius: 5px;
+    padding: 0 16px;
+  }
+
+  label {
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
   }
 
   p {
-    color: #fff;
-    font-size: 15px;
-    margin-top: 4px;
+    font-size: 14px;
+    line-height: 80%;
+    color: #cf3057;
+    font-weight: 600;
+    height: 10px;
   }
 `;
 
 export const Link = styled(ReactLink)`
-  color: #ffb800;
-  font-weight: 600;
-  margin-left: 4px;
   text-decoration: none;
-  
-
-  &:hover {
-    text-decoration: underline;
-  }
+  color: #fff;
 `;
