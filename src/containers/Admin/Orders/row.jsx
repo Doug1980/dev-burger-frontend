@@ -27,6 +27,13 @@ import { orderStatusOptions } from './orderStatus';
 import { api } from '../../../services/api';
 
 const statusConfig = {
+  'Novo Pedido': {
+    label: 'Novo Pedido',
+    icon: <FaClipboardList />,
+    bg: '#fff3e0',
+    color: '#e65100',
+  },
+
   'Pedido realizado': {
     label: 'Pedido Realizado',
     icon: <FaClipboardList />,
@@ -73,6 +80,7 @@ const statusConfig = {
 
 // Ordem dos status — define o fluxo
 const statusFlow = [
+  'Novo Pedido',
   'Pedido Realizado',
   'Em Preparação',
   'Pedido Pronto',
@@ -85,7 +93,10 @@ export function Row({ row, setOrders, orders }) {
   const [loading, setLoading] = useState(false);
 
   const isNewOrder =
-    !row.status || row.status === '' || row.status === 'Pedido realizado';
+    !row.status ||
+    row.status === '' ||
+    row.status === 'Pedido realizado' ||
+    row.status === 'Novo Pedido';
 
   const currentIndex = statusFlow.indexOf(
     row.status === 'Pedido realizado' ? 'Pedido Realizado' : row.status,
