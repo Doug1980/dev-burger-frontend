@@ -28,7 +28,6 @@ export default function CheckoutForm() {
     e.preventDefault();
 
     if (!stripe || !elements) {
-      console.log('Stripe ou Elements com falha, tente novemante.');
       return;
     }
 
@@ -48,17 +47,11 @@ export default function CheckoutForm() {
       toast.error(error.message);
     } else if (paymentIntent && paymentIntent.status === 'succeeded') {
       try {
-        console.log('CONTEÚDO DO CARRINHO:', cartProducts);
-
         // 🔹 ALTERAÇÃO 2:
         // Aqui montamos o array products a partir do carrinho.
         const products = cartProducts.map((product) => {
           // Vamos imprimir exatamente o que está sendo montado para não ter erro
           const quantityToSubmit = product.quantity || 1;
-
-          console.log(
-            `Enviando Produto: ${product.name} | ID Real: ${product.id} | Qtd: ${quantityToSubmit}`,
-          );
 
           return {
             id: product.id, // Aqui vai o 32 (ID do Pudim)
@@ -77,14 +70,9 @@ export default function CheckoutForm() {
 
         const { status, data } = response;
 
-        console.log('STATUS:', status);
-        console.log('DATA COMPLETA:', data);
-
         // 🔹 ALTERAÇÃO 4:
         // Tratamento dos possíveis status da API.
         if (status === 200 || status === 201) {
-          console.log('ORDER ID GERADO:', data._id);
-
           localStorage.setItem('lastOrderId', data._id);
 
           navigate('/completepayment');

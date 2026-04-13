@@ -16,7 +16,6 @@ export function CompletePayment() {
   const handleGoToStatus = () => {
     const orderId = localStorage.getItem('lastOrderId');
 
-    console.log('Tentando navegar para o ID:', orderId);
 
     if (orderId) {
       // 1. Tentativa pelo React Router (Ideal)

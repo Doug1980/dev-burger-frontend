@@ -213,7 +213,7 @@ export function Row({ row, setOrders, orders }) {
     }
 
     const result = await Swal.fire({
-      title: 'Confirmar novo status?',
+      title: 'Alterar novo status?',
       text: `Deseja avançar para "${selectedValue}"?`,
       icon: 'question',
       showCancelButton: true,

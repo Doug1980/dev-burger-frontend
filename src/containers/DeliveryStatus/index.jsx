@@ -91,9 +91,6 @@ export const DeliveryStatus = () => {
 
   async function handleClientCancel() {
     const userData = localStorage.getItem('devburguer:userData');
-    console.log('userData:', userData);
-    console.log('token:', userData && JSON.parse(userData).token);
-    console.log('orderIdFromState:', orderIdFromState);
 
     const { isConfirmed } = await Swal.fire({
       title: 'Cancelar pedido?',
