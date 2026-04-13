@@ -1,6 +1,6 @@
 export const orderStatusOptions = [
   { id: 0, value: 'Todos', label: 'Todos' },
-  { id: 7, value: '', label: 'Novo Pedido' }, // 👈 status vazio = novo pedido
+  { id: 7, value: 'Novo Pedido', label: 'Novo Pedido' },
   { id: 1, value: 'Pedido Realizado', label: 'Pedido Realizado' },
   { id: 2, value: 'Em Preparação', label: 'Em Preparação' },
   { id: 3, value: 'Pedido Pronto', label: 'Pedido Pronto' },

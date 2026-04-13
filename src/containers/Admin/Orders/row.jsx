@@ -279,6 +279,8 @@ export function Row({ row, setOrders, orders }) {
               orderStatusOptions.find((s) => {
                 if (row.status === 'Pedido realizado')
                   return s.value === 'Pedido Realizado';
+                if (!row.status || row.status === '')
+                  return s.value === 'Novo Pedido';
                 return s.value === row.status;
               }) || null
             }
