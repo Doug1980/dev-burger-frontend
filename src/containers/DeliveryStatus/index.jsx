@@ -109,10 +109,14 @@ export const DeliveryStatus = () => {
     if (!isConfirmed) return;
 
     try {
-      await api.put(`/orders/${orderIdFromState}`, {
-        status: 'Pedido Cancelado',
-        cancelReason: 'Cancelado pelo cliente',
-      });
+      const userData = localStorage.getItem('devburguer:userData');
+      const token = userData && JSON.parse(userData).token;
+
+      await api.put(
+        `/orders/${orderIdFromState}`,
+        { status: 'Pedido Cancelado', cancelReason: 'Cancelado pelo cliente' },
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
       localStorage.removeItem('lastOrderId');
       navigate('/cardapio');
     } catch (err) {
@@ -152,7 +156,8 @@ export const DeliveryStatus = () => {
             onClick={handleClientCancel}
             disabled={
               order?.status !== 'Pedido Realizado' &&
-              order?.status !== 'Pedido realizado'
+              order?.status !== 'Pedido realizado' &&
+              order?.status !== 'Novo Pedido'
             }
           >
             Cancelar pedido
