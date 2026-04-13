@@ -83,8 +83,10 @@ export const Title = styled.h2`
   font-family: "Road Rage", sans-serif;
   font-size: 40px;
   color: #fff;
+  gap: 5px;
 
   span {
+    
     color: #FF8F00;
     font-family: "Road Rage", sans-serif;
   }
@@ -93,7 +95,7 @@ export const Title = styled.h2`
 export const Form = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 1px;
   padding: 20px;
   width: 100%;
   max-width: 400px;
@@ -102,7 +104,7 @@ export const Form = styled.form`
 export const InputContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 1px;
   width: 100%;
 
   input {
@@ -120,6 +122,7 @@ export const InputContainer = styled.div`
   }
 
   p {
+    margin-bottom: 15px;
     font-size: 14px;
     line-height: 80%;
     color: #cf3057;
