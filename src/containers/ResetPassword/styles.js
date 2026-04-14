@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { Link as ReactLink } from 'react-router-dom';
-
 import BackgroundLogin from '../../assets/bg_login.svg';
 import Background from '../../assets/background.svg';
 
@@ -10,32 +9,13 @@ export const Container = styled.div`
   width: 100vw;
 `;
 
-export const Header = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;  
-  
-
-  img {
-    width: 160px;
-  }
-
-  @media (max-width: 768px) {
-    img {
-      width: 120px;
-    }
-  }
-`;
-
 export const LeftContainer = styled.div`
   background: url('${BackgroundLogin}');
   background-size: cover;
   background-position: center;
-
   height: 100%;
   width: 100%;
   max-width: 50%;
-
   display: flex;
   align-items: center;
   justify-content: center;
@@ -54,25 +34,12 @@ export const RightContainer = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
-
   height: 100%;
   width: 100%;
   max-width: 50%;
-
   background: url('${Background}');
   background-color: #1e1e1e;
   background-size: 1200px;
-
-  p {
-    margin-top: 4px;
-    color: #fff;
-    font-size: 18px;
-    font-weight: 800;
-
-    a {
-      text-decoration: underline;
-    }
-  }
 
   @media (max-width: 768px) {
     max-width: 100%;
@@ -80,23 +47,44 @@ export const RightContainer = styled.div`
   }
 `;
 
+export const Header = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 20px;
+
+  img {
+    width: 160px;
+  }
+
+  @media (max-width: 768px) {
+    img {
+      width: 120px;
+    }
+  }
+`;
+
 export const Title = styled.h2`
   font-family: "Road Rage", sans-serif;
-  font-size: 40px;
+  font-size: 32px;
   color: #fff;
-  gap: 5px;
+  margin: 0;
+  text-align: center;
+`;
 
-  span {
-    
-    color: #FF8F00;
-    font-family: "Road Rage", sans-serif;
-  }
+export const Subtitle = styled.p`
+  color: #fff;
+  font-size: 16px;
+  text-align: center;
+  line-height: 1.6;
+  margin: 0 0 24px;
 `;
 
 export const Form = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 1px;
+  gap: 20px;
   padding: 20px;
   width: 100%;
   max-width: 400px;
@@ -105,7 +93,7 @@ export const Form = styled.form`
 export const InputContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1px;
+  gap: 5px;
   width: 100%;
 
   input {
@@ -123,8 +111,6 @@ export const InputContainer = styled.div`
   }
 
   p {
-    
-    margin-bottom: 15px;
     font-size: 14px;
     line-height: 80%;
     color: #cf3057;
@@ -133,7 +119,18 @@ export const InputContainer = styled.div`
   }
 `;
 
-export const Link = styled(ReactLink)`
-  text-decoration: none;
-  color: #fff;
+export const LinkBack = styled.button`
+  background: none;
+  border: none;
+  color: #FF8F00;
+  font-size: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  align-self: center;
+  margin-top: 4px;
+
+  &:hover {
+    color: #e67e00;
+  }
 `;

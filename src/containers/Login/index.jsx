@@ -105,19 +105,34 @@ export function Login() {
 
         <Form onSubmit={handleSubmit(onSubmit)}>
           <InputContainer>
-            <label>E-mail</label>
-            <input type="email" {...register('email')} />
+            <label htmlFor="email">E-mail</label>
+            <input id="email" type="email" {...register('email')} />
             <p>{errors?.email?.message}</p>
           </InputContainer>
 
           <InputContainer>
-            <label>Senha</label>
-            <input type="password" {...register('password')} />
+            <label htmlFor="password">Senha</label>
+            <input id="password" type="password" {...register('password')} />
             <p>{errors?.password?.message}</p>
           </InputContainer>
 
+          <Link
+            to="/esqueceu-senha"
+            style={{
+              alignSelf: 'flex-start',
+              fontSize: '13px',
+              marginTop: '-33px',
+              marginBottom: '4px',
+              color: '#FF8F00',
+              textDecoration: 'underline',
+            }}
+          >
+            Esqueceu a senha?
+          </Link>
+
           <Button type="submit">Entrar</Button>
         </Form>
+
         <p>
           Não possui conta? <Link to="/cadastro">Clique aqui.</Link>
         </p>

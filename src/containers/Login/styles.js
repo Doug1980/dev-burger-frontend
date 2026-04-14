@@ -124,6 +124,7 @@ export const InputContainer = styled.div`
     }
 
     p {
+        
         font-size: 14px;
         line-height: 80%;
         color: #cf3057;

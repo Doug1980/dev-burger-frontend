@@ -7,6 +7,8 @@ import {
   CompletePayment,
   DeliveryStatus,
   EditProduct,
+  ForgotPassword,
+  ResetPassword,
   Home,
   Login,
   Menu,
@@ -27,10 +29,14 @@ export function Router() {
       {userInfo ? (
         <>
           {/* BLOCO DO USUÁRIO COMUM */}
-          <Route 
-            path="/" 
+          <Route
+            path="/"
             element={
-              userInfo.admin ? <Navigate to="/admin/pedidos" replace /> : <UserLayout />
+              userInfo.admin ? (
+                <Navigate to="/admin/pedidos" replace />
+              ) : (
+                <UserLayout />
+              )
             }
           >
             <Route index element={<Home />} />
@@ -42,8 +48,8 @@ export function Router() {
           </Route>
 
           {/* BLOCO DO ADMIN */}
-          <Route 
-            path="/admin" 
+          <Route
+            path="/admin"
             element={
               userInfo.admin ? <AdminLayout /> : <Navigate to="/" replace />
             }
@@ -53,7 +59,7 @@ export function Router() {
             <Route path="editar-produto" element={<EditProduct />} />
             <Route path="produtos" element={<Products />} />
           </Route>
-          
+
           {/* Travas para logados não voltarem ao Login */}
           <Route path="/login" element={<Navigate to="/" replace />} />
           <Route path="/cadastro" element={<Navigate to="/" replace />} />
@@ -63,6 +69,8 @@ export function Router() {
           {/* BLOCO PÚBLICO (NÃO LOGADO) */}
           <Route path="/login" element={<Login />} />
           <Route path="/cadastro" element={<Register />} />
+          <Route path="/esqueceu-senha" element={<ForgotPassword />} />
+          <Route path="/redefinir-senha" element={<ResetPassword />} />
           {/* Qualquer outra rota manda para o Login */}
           <Route path="*" element={<Navigate to="/login" replace />} />
         </>
