@@ -70,7 +70,10 @@ export function Orders() {
         if (statusOption.id === 7) {
           newFilteredOrders = orders.filter(
             (o) =>
-              !o.status || o.status === '' || o.status === 'Pedido realizado',
+              !o.status ||
+              o.status === '' ||
+              o.status === 'Pedido realizado' ||
+              o.status === 'Novo Pedido',
           );
         } else {
           newFilteredOrders = orders.filter(
@@ -95,7 +98,11 @@ export function Orders() {
   };
 
   const newOrdersCount = orders.filter(
-    (o) => !o.status || o.status === '' || o.status === 'Pedido realizado',
+    (o) =>
+      !o.status ||
+      o.status === '' ||
+      o.status === 'Pedido realizado' ||
+      o.status === 'Novo Pedido',
   ).length;
 
   return (
