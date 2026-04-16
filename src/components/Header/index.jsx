@@ -25,7 +25,10 @@ export function Header() {
   const { pathname } = useResolvedPath();
 
   const cartCount = cartProducts?.length || 0;
-  const hasActiveOrder = !!localStorage.getItem('lastOrderId');
+  const activeOrdersCount = parseInt(
+    localStorage.getItem('activeOrdersCount') || '0',
+    10,
+  );
 
   async function logoutUser() {
     await logout();
@@ -94,7 +97,7 @@ export function Header() {
             >
               <IconWithBadge
                 icon={MdDeliveryDining}
-                count={hasActiveOrder ? 1 : 0}
+                count={activeOrdersCount}
               />
               <span>Status do pedido</span>
             </LinkContainer>

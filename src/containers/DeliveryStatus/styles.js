@@ -54,12 +54,19 @@ export const OrderHeader = styled.div`
   text-align: center;
 
   p {
-    color: #888;
-    font-size: 14px;
+    background: #fff3e0;
+    border: 1px solid #FF8F00;
+    border-radius: 8px;
+    padding: 6px 16px;
+    color: #e65100;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: monospace;
+    letter-spacing: 0.05em;
     margin: 0;
 
     @media (max-width: 768px) {
-      font-size: 12px;
+      font-size: 11px;
       word-break: break-all;
     }
   }

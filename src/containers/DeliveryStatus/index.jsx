@@ -17,7 +17,6 @@ import {
   PageTitle,
 } from './styles';
 
-// 👇 Fora do componente — persiste entre navegações
 function getNotifiedOrders() {
   try {
     return new Set(JSON.parse(localStorage.getItem('notifiedOrders') || '[]'));
@@ -52,7 +51,7 @@ export const DeliveryStatus = () => {
       const response = await api.get('/orders');
       const allOrders = response.data;
 
-      // 👇 Dispara pop-up apenas uma vez por pedido entregue
+      // Dispara pop-up apenas uma vez por pedido entregue
       allOrders
         .filter((o) => o.status === 'Pedido Entregue')
         .forEach((o) => {
@@ -74,11 +73,16 @@ export const DeliveryStatus = () => {
           }
         });
 
-      // 👇 Retorna só pedidos em andamento
-      return allOrders.filter(
+      // Filtra só pedidos em andamento
+      const activeOrders = allOrders.filter(
         (o) =>
           o.status !== 'Pedido Entregue' && o.status !== 'Pedido Cancelado',
       );
+
+      // 👇 Salva a contagem real para o ícone do header
+      localStorage.setItem('activeOrdersCount', activeOrders.length);
+
+      return activeOrders;
     },
     enabled: !!userInfo?.id,
     refetchInterval: 5000,
@@ -104,6 +108,7 @@ export const DeliveryStatus = () => {
         cancelReason: 'Cancelado pelo cliente',
       });
       localStorage.removeItem('lastOrderId');
+      localStorage.setItem('activeOrdersCount', 0);
       navigate('/cardapio');
     } catch (err) {
       Swal.fire({
