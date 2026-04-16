@@ -51,7 +51,7 @@ export const DeliveryStatus = () => {
       const response = await api.get('/orders');
       const allOrders = response.data;
 
-      // Dispara pop-up apenas uma vez por pedido entregue
+      // 👇 Notifica pedido ENTREGUE (pelo admin)
       allOrders
         .filter((o) => o.status === 'Pedido Entregue')
         .forEach((o) => {
@@ -73,13 +73,38 @@ export const DeliveryStatus = () => {
           }
         });
 
+      // 👇 Notifica pedido CANCELADO (pelo admin)
+      allOrders
+        .filter((o) => o.status === 'Pedido Cancelado')
+        .forEach((o) => {
+          const id = o._id || o.id;
+          if (!getNotifiedOrders().has(id)) {
+            addNotifiedOrder(id);
+            const shortId = id.slice(-6).toUpperCase();
+            const motivo = o.cancelReason || 'Não informado';
+
+            Swal.fire({
+              title: '❌ Pedido cancelado',
+              html: `Seu pedido <strong>#${shortId}</strong> foi cancelado.<br/><br/>
+                     <strong>Motivo:</strong> ${motivo}<br/><br/>
+                     Dúvidas? Entre em contato pelo telefone ou WhatsApp.`,
+              icon: 'error',
+              confirmButtonText: 'Voltar ao cardápio',
+              confirmButtonColor: '#FF8F00',
+            }).then(() => {
+              localStorage.removeItem('lastOrderId');
+              localStorage.setItem('activeOrdersCount', 0);
+              navigate('/cardapio');
+            });
+          }
+        });
+
       // Filtra só pedidos em andamento
       const activeOrders = allOrders.filter(
         (o) =>
           o.status !== 'Pedido Entregue' && o.status !== 'Pedido Cancelado',
       );
 
-      // 👇 Salva a contagem real para o ícone do header
       localStorage.setItem('activeOrdersCount', activeOrders.length);
 
       return activeOrders;
