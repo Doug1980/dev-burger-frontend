@@ -15,6 +15,7 @@ import {
   Button,
   CancelLink,
   PageTitle,
+  EmptyMessage,
 } from './styles';
 
 function getNotifiedOrders() {
@@ -156,11 +157,7 @@ export const DeliveryStatus = () => {
   if (!orders.length) {
     return (
       <Container>
-        <p
-          style={{ marginTop: '100px', marginBottom: '50px', fontSize: '25px' }}
-        >
-          Nenhum pedido em andamento.
-        </p>
+        <EmptyMessage>Nenhum pedido em andamento.</EmptyMessage>
         <Button onClick={() => navigate('/cardapio')}>
           Ir para o Cardápio
         </Button>

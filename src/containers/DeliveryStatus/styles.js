@@ -252,3 +252,19 @@ export const CancelLink = styled.button`
     pointer-events: none;
   }
 `;
+
+export const EmptyMessage = styled.p`
+  font-size: 22px;
+  color: #333;
+  text-align: center;
+  margin-top: 100px;
+  margin-bottom: 50px;
+  line-height: 1.4;
+
+  @media (max-width: 768px) {
+    font-size: 18px;
+    margin-top: 60px;
+    margin-bottom: 30px;
+    padding: 0 20px;
+  }
+`;
