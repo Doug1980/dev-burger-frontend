@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../../services/api';
@@ -17,12 +17,24 @@ import {
   PageTitle,
 } from './styles';
 
+// 👇 Fora do componente — persiste entre navegações
+function getNotifiedOrders() {
+  try {
+    return new Set(JSON.parse(localStorage.getItem('notifiedOrders') || '[]'));
+  } catch {
+    return new Set();
+  }
+}
+
+function addNotifiedOrder(id) {
+  const set = getNotifiedOrders();
+  set.add(id);
+  localStorage.setItem('notifiedOrders', JSON.stringify([...set]));
+}
+
 export const DeliveryStatus = () => {
   const { userInfo } = useUser();
   const navigate = useNavigate();
-
-  // 👇 Guarda os IDs já notificados para não disparar o pop-up duas vezes
-  const notifiedOrders = useRef(new Set());
 
   const statusMap = [
     { label: 'Pedido Realizado', value: 'Pedido Realizado' },
@@ -38,16 +50,15 @@ export const DeliveryStatus = () => {
       const token = userInfo?.token;
       if (!token) throw new Error('Token não encontrado');
       const response = await api.get('/orders');
-
       const allOrders = response.data;
 
-      // 👇 Detecta pedidos entregues ainda não notificados
+      // 👇 Dispara pop-up apenas uma vez por pedido entregue
       allOrders
         .filter((o) => o.status === 'Pedido Entregue')
         .forEach((o) => {
           const id = o._id || o.id;
-          if (!notifiedOrders.current.has(id)) {
-            notifiedOrders.current.add(id);
+          if (!getNotifiedOrders().has(id)) {
+            addNotifiedOrder(id);
             const shortId = id.slice(-6).toUpperCase();
 
             Swal.fire({
@@ -63,7 +74,7 @@ export const DeliveryStatus = () => {
           }
         });
 
-      // 👇 Retorna apenas pedidos em andamento (sem entregues e sem cancelados)
+      // 👇 Retorna só pedidos em andamento
       return allOrders.filter(
         (o) =>
           o.status !== 'Pedido Entregue' && o.status !== 'Pedido Cancelado',
