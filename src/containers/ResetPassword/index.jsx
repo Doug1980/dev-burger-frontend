@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -23,6 +24,15 @@ export function ResetPassword() {
   const [searchParams] = useSearchParams();
   const token = searchParams.get('token');
 
+  // 👇 Bloqueia os inputs após redefinição bem sucedida
+  const [resetDone, setResetDone] = useState(false);
+
+  // 👇 Sem token na URL → redireciona imediatamente para login
+  if (!token) {
+    navigate('/login', { replace: true });
+    return null;
+  }
+
   const schema = yup.object({
     password: yup
       .string()
@@ -47,7 +57,8 @@ export function ResetPassword() {
         pending: 'Redefinindo senha...',
         success: {
           render() {
-            setTimeout(() => navigate('/login'), 2000);
+            setResetDone(true); // 👈 bloqueia os inputs
+            setTimeout(() => navigate('/login', { replace: true }), 2000);
             return 'Senha redefinida com sucesso! Redirecionando... ✅';
           },
         },
@@ -74,6 +85,7 @@ export function ResetPassword() {
               id="password"
               type="password"
               placeholder="••••••••"
+              disabled={resetDone} // 👈 bloqueia após redefinição
               {...register('password')}
             />
             <p>{errors?.password?.message}</p>
@@ -84,14 +96,15 @@ export function ResetPassword() {
               id="confirmPassword"
               type="password"
               placeholder="••••••••"
+              disabled={resetDone} // 👈 bloqueia após redefinição
               {...register('confirmPassword')}
             />
             <p>{errors?.confirmPassword?.message}</p>
           </InputContainer>
-          <Button type="submit" disabled={isSubmitting}>
+          <Button type="submit" disabled={isSubmitting || resetDone}>
             Salvar nova senha
           </Button>
-          <LinkBack onClick={() => navigate('/login')}>
+          <LinkBack type="button" onClick={() => navigate('/login')}>
             Voltar ao login
           </LinkBack>
         </Form>

@@ -43,7 +43,9 @@ export function ForgotPassword() {
           <img src={Logo} alt="Dev Burguer" />
         </Header>
         <Title>Esqueceu sua senha?</Title>
-        <Subtitle>Digite e-mail cadastrado para redefinição de senha.</Subtitle>
+        <Subtitle>
+          Digite o e-mail cadastrado para redefinição de senha.
+        </Subtitle>
         <Form onSubmit={handleSubmit(onSubmit)}>
           <InputContainer>
             <label htmlFor="email">E-mail</label>
@@ -58,7 +60,7 @@ export function ForgotPassword() {
           <Button type="submit" disabled={isSubmitting}>
             Enviar link de redefinição
           </Button>
-          <LinkBack onClick={() => navigate('/login')}>
+          <LinkBack type="button" onClick={() => navigate('/login')}>
             Voltar ao login
           </LinkBack>
         </Form>
