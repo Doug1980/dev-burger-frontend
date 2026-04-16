@@ -138,7 +138,7 @@ export function Header() {
             >
               <IconWithBadge
                 icon={MdDeliveryDining}
-                count={hasActiveOrder ? 1 : 0}
+                count={activeOrdersCount}
               />
               <span>Status do pedido</span>
             </LinkContainer>
