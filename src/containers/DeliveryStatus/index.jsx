@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../../services/api';
@@ -12,10 +12,7 @@ import {
   Step,
   Line,
   Content,
-  FeedbackContainer,
-  FeedbackContainer1,
   Button,
-  CancelReason,
   CancelLink,
   PageTitle,
 } from './styles';
@@ -23,6 +20,9 @@ import {
 export const DeliveryStatus = () => {
   const { userInfo } = useUser();
   const navigate = useNavigate();
+
+  // 👇 Guarda os IDs já notificados para não disparar o pop-up duas vezes
+  const notifiedOrders = useRef(new Set());
 
   const statusMap = [
     { label: 'Pedido Realizado', value: 'Pedido Realizado' },
@@ -38,7 +38,33 @@ export const DeliveryStatus = () => {
       const token = userInfo?.token;
       if (!token) throw new Error('Token não encontrado');
       const response = await api.get('/orders');
-      return response.data.filter(
+
+      const allOrders = response.data;
+
+      // 👇 Detecta pedidos entregues ainda não notificados
+      allOrders
+        .filter((o) => o.status === 'Pedido Entregue')
+        .forEach((o) => {
+          const id = o._id || o.id;
+          if (!notifiedOrders.current.has(id)) {
+            notifiedOrders.current.add(id);
+            const shortId = id.slice(-6).toUpperCase();
+
+            Swal.fire({
+              title: '✅ Pedido entregue!',
+              html: `Seu pedido <strong>#${shortId}</strong> foi entregue com sucesso!<br/>Obrigado pela preferência, <strong>${userInfo?.name}</strong>! 🍔`,
+              icon: 'success',
+              confirmButtonText: 'Pedir novamente',
+              confirmButtonColor: '#FF8F00',
+            }).then(() => {
+              localStorage.removeItem('lastOrderId');
+              navigate('/cardapio');
+            });
+          }
+        });
+
+      // 👇 Retorna apenas pedidos em andamento (sem entregues e sem cancelados)
+      return allOrders.filter(
         (o) =>
           o.status !== 'Pedido Entregue' && o.status !== 'Pedido Cancelado',
       );
@@ -132,19 +158,16 @@ export const DeliveryStatus = () => {
             </StatusContainer>
 
             <Content>
-              {order.status !== 'Pedido Entregue' &&
-                order.status !== 'Pedido Cancelado' && (
-                  <CancelLink
-                    onClick={() => handleClientCancel(displayId)}
-                    disabled={
-                      order.status !== 'Pedido Realizado' &&
-                      order.status !== 'Pedido realizado' &&
-                      order.status !== 'Novo Pedido'
-                    }
-                  >
-                    Cancelar pedido
-                  </CancelLink>
-                )}
+              <CancelLink
+                onClick={() => handleClientCancel(displayId)}
+                disabled={
+                  order.status !== 'Pedido Realizado' &&
+                  order.status !== 'Pedido realizado' &&
+                  order.status !== 'Novo Pedido'
+                }
+              >
+                Cancelar pedido
+              </CancelLink>
             </Content>
           </OrderCard>
         );
